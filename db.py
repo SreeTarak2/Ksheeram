@@ -5692,8 +5692,8 @@ for seller in dairy_data:
 
     enriched_data.append(seller)
     print(f"[INFO] {seller['name']} -> lat: {lat}, lon: {lon}")
-    time.sleep(1)  # Respect rate limits
-
+    time.sleep(1) 
+    
 # Insert into MongoDB
 try:
     collection.delete_many({})

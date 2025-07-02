@@ -1,18 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ksheeram - All Products</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="../static/css/style.css" />
 </head>
-
 <body data-theme="dark-theme">
 
     <header class="main-header">
@@ -48,62 +42,72 @@
                 <h1><i class="fas fa-shopping-basket"></i> Browse Products</h1>
                 <p>Discover fresh milk, ghee, paneer, and more from our network of trusted sellers.</p>
             </div>
-            <!-- Filter Bar -->
-            <div class="filter-bar">
-                <span class="filter-label">Filter by Category:</span>
-                <select id="category-filter">
-                    <option value="milk">Milk</option>
-                    <option value="ghee">Ghee</option>
-                    <option value="paneer">Paneer</option>
-                    <option value="curd">Curd</option>
-                </select>
-
-                <span class="filter-label">Sort by:</span>
-                <select id="sort-filter">
-                    <option value="recommended">Recommended</option>
-                    <option value="price_asc">Price: Low to High</option>
-                    <option value="price_desc">Price: High to Low</option>
-                    <option value="rating">Rating</option>
-                </select>
-            </div>
-
-            <!-- Product Grid -->
-            <div class="card-grid" id="product-grid">
-                {% if products %}
-                {% for product in products %}
-                <div class="product-card">
-                    <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-image">
-                    <div class="product-content">
-                        <h4>{{ product.name }}</h4>
-                        <p class="product-seller">From: {{ product.seller }}</p>
-                        <p class="product-rating">
-                            <i class="fas fa-star"></i> {{ product.ratings }} / 5
-                        </p>
-                        <div class="product-footer">
-                            <span class="product-price">₹{{ product.price }} / {{ product.unit }}</span>
-                            <button class="btn btn-primary add-to-cart-btn" data-product-name="{{ product.name }}"
-                                data-product-price="{{ product.price }}" data-product-seller="{{ product.seller }}"
-                                data-product-image="{{ product.image_url }}"
-                                data-seller-id = "{{product.id}}">
-                                <i class="fas fa-plus"></i> Add
-                            </button>
-
+            
+            <!-- Product Section -->
+            <div class="product-section">
+                <h3 class="section-subtitle">Products Near You</h3>
+                <div class="card-grid product-grid" id="nearby-product-grid">
+                    {% if nearby_products %}
+                    {% for product in nearby_products %}
+                    <div class="product-card" data-category="{{ product.category }}" data-price="{{ product.price }}" data-rating="{{ product.ratings }}">
+                        <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-image">
+                        <div class="product-content">
+                            <h4>{{ product.name }}</h4>
+                            <p class="product-seller">From: {{ product.seller }}</p>
+                            <p class="product-rating"><i class="fas fa-star"></i> {{ product.ratings }} / 5</p>
+                            <div class="product-footer">
+                                <span class="product-price">₹{{ product.price }} / {{ product.unit }}</span>
+                                <button class="btn btn-primary add-to-cart-btn" 
+                                        data-seller-id="{{ product.seller_id }}"
+                                        data-product-name="{{ product.name }}"
+                                        data-product-price="{{ product.price }}"
+                                        data-product-seller="{{ product.seller }}"
+                                        data-product-image="{{ product.image_url }}"
+                                        data-product-unit="{{ product.unit }}"
+                                        {% if not product.in_stock %}disabled{% endif %}>
+                                    <i class="fas fa-shopping-cart"></i> Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                        <div class="stock-status">
+                            {% if product.in_stock %}<span class="in-stock">In Stock</span>{% else %}<span class="out-of-stock">Out of Stock</span>{% endif %}
                         </div>
                     </div>
-                    <div class="stock-status">
-                        {% if product.in_stock %}
-                        <span class="in-stock">In Stock</span>
-                        {% else %}
-                        <span class="out-of-stock">Out of Stock</span>
-                        {% endif %}
+                    {% endfor %}
+                    {% else %}
+                    <p class="no-products-message">No products found within a 10km radius. Check out other products below!</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="view-all-container" id="view-all-container" {% if not other_products %}style="display:none;" {% endif %}>
+                <hr>
+                <button class="btn btn-secondary" id="view-all-btn">View All Products</button>
+            </div>
+
+            <div class="product-section hidden" id="other-products-section">
+                <h3 class="section-subtitle">More Products</h3>
+                <div class="card-grid product-grid" id="other-product-grid">
+                    {% for product in other_products %}
+                    <div class="product-card">
+                        <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-image">
+                        <div class="product-content">
+                            <h4>{{ product.name }}</h4>
+                            <p class="product-seller">From: {{ product.seller }}</p>
+                            <p class="product-rating"><i class="fas fa-star"></i> {{ product.ratings }} / 5</p>
+                            <div class="product-footer">
+                                <span class="product-price">₹{{ product.price }} / {{ product.unit }}</span>
+                                <button class="add-to-cart-btn" data-name="{{ product.name }}" data-seller-id="{{ product.seller._id }}">
+                                    <i class="fas fa-shopping-cart"></i> Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                        <div class="stock-status">
+                            {% if product.in_stock %}<span class="in-stock">In Stock</span>{% else %}<span class="out-of-stock">Out of Stock</span>{% endif %}
+                        </div>
                     </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
-                {% else %}
-                <div class="product-card">
-                    <p>No products available at the moment.</p>
-                </div>
-                {% endif %}
             </div>
         </div>
     </main>
@@ -120,11 +124,9 @@
                 <div class="footer-col">
                     <h4>Quick Links</h4>
                     <ul>
-                        <li><a href="/home" class="nav-link">Home</a></li>
-                        <li><a href="/sellers" class="nav-link">Sellers</a></li>
-                        <li><a href="/products" class="nav-link">Products</a></li>
-                        <li><a href="/myorders" class="nav-link">My Orders</a></li>
-                        <li><a href="/myaccount" class="nav-link">My Account</a></li>
+                        <li><a href="#hero">Home</a></li>
+                        <li><a href="#partners">Sellers</a></li>
+                        <li><a href="#products">Products</a></li>
                         <li><a href="#">Privacy Policy</a></li>
                     </ul>
                 </div>
@@ -143,10 +145,8 @@
     </footer>
 
     <script src="../static/js/theme.js"></script>
-    <script src="../static/js/product.js"></script>
-    <script src="../static/js/cart.js"></script>
+    <script src="../static/js/products.js"></script>
     <script src="../static/js/logout.js"></script>
-    
+    <script src="../static/js/sortProducts.js"></script>
 </body>
-
 </html>

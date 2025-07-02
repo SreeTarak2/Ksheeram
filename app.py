@@ -63,36 +63,90 @@ def home():
 @jwt_required()
 def sellers():
     user = get_jwt_identity()
-    return render_template("seller.html", user=user)
+    return render_template("sellers.html", user=user)
 
 
+# ========================== Products ==========================
+@app.route("/products/", methods=["GET"])
 @app.route("/products", methods=["GET"])
 @jwt_required()
 def products():
-    user = get_jwt_identity()
-    all_records = sellers_info.find()
+    # Get the email of the user from the JWT
+    user_email = get_jwt_identity()
+    print(f"User email: {user_email}")  # Debugging: Check the extracted user email
+
+    # Step 1: Get User's Location
+    user_data = buyers_collection.find_one({"email": user_email})
+    user_location = user_data.get("last_location") if user_data else None
+
+    # Step 2: Fetch all products from all sellers
+    all_sellers = list(sellers_info.find())
     all_products = []
-    # print(all_records)
-    for user in all_records:
-        if "products" in user:
-            for product in user["products"]:
+
+    for seller in all_sellers:
+        if "products" in seller:
+            for product in seller["products"]:
                 all_products.append(
                     {
-                        "id": str(user["_id"]),
+                        "seller_id": str(seller["_id"]),
                         "name": product["name"],
                         "price": product["price"],
                         "unit": product["unit"],
-                        "seller": user["name"],
-                        "ratings": user["rating"],
+                        "seller": seller.get("name", "Unnamed Store"),
+                        "ratings": seller.get("rating", 4.5),
                         "image_url": product.get("image_url", "default_image_url.jpg"),
+                        "in_stock": product.get("in_stock", True),
+                        "category": product.get("category", "milk"),
                     }
                 )
 
     if not all_products:
-        return "No products available", 404
+        return render_template(
+            "products.html", user=user_email, nearby_products=[], other_products=[]
+        )
 
-    return render_template("products.html", user=user, products=all_products)
+    # Step 3: Partition products into "nearby" and "other" based on user location
+    nearby_products = []
+    other_products = []
+    search_radius_km = 10  # 10km radius for "nearby"
 
+    if user_location and "lat" in user_location and "lon" in user_location:
+        user_lat = user_location["lat"]
+        user_lon = user_location["lon"]
+
+        # Find nearby seller IDs first
+        nearby_seller_ids = set()
+        for seller in all_sellers:
+            try:
+                seller_lat = float(seller.get("latitude"))
+                seller_lon = float(seller.get("longitude"))
+                dist = haversine(user_lat, user_lon, seller_lat, seller_lon)
+                if dist <= search_radius_km:
+                    nearby_seller_ids.add(str(seller["_id"]))
+            except (ValueError, TypeError, KeyError) as e:
+                print(f"Error processing seller's location: {e}")
+                continue
+
+        # Partition the products into nearby and other categories
+        for product in all_products:
+            if product["seller_id"] in nearby_seller_ids:
+                nearby_products.append(product)
+            else:
+                other_products.append(product)
+    else:
+        # If no location data available, put everything in "other_products"
+        other_products = all_products
+
+    # Render the template with both nearby and other products
+    return render_template(
+        "products.html",
+        user=user_email,
+        nearby_products=nearby_products,
+        other_products=other_products,
+    )
+
+
+# --------------------------- My Orders --------------------------------
 
 @app.route("/myorders", methods=["GET"])
 @jwt_required()
@@ -125,8 +179,6 @@ def get_cart():
             item.get("quantity", 0) for item in cart.get("items", [])
         )
 
-        # Ensure all items have necessary fields for the frontend
-        # This is good practice to prevent errors if data is inconsistent
         items_with_ids = cart.get("items", [])
         for item in items_with_ids:
             if "seller_id" in item and isinstance(item["seller_id"], ObjectId):
@@ -230,7 +282,8 @@ def get_or_create_cart(buyer_id):
 
 
 # --- API Route to add a PLAN to the cart ---
-# This route is good, but let's change the URL for consistency
+
+
 @app.route("/cart/add-plan", methods=["POST"])
 @jwt_required()
 def add_plan_to_cart():
@@ -290,6 +343,7 @@ def add_plan_to_cart():
 
 # --- UNIFIED Route to remove ANY item from the cart ---
 
+
 @app.route("/cart/remove", methods=["POST"])
 @jwt_required()
 def remove_from_cart():
@@ -327,7 +381,6 @@ def remove_from_cart():
 
 
 # --- UNIFIED Route to update item quantity ---
-
 @app.route("/cart/update", methods=["POST"])
 @jwt_required()
 def update_cart_item_quantity():
@@ -371,11 +424,13 @@ def update_cart_item_quantity():
 
 # ======================= Account settings ================================
 
+
 @app.route("/myaccount", methods=["GET"])
 @jwt_required()
 def my_account():
     user = get_jwt_identity()
     return render_template("myaccount.html", user=user)
+
 
 # account details
 @app.route("/account/details", methods=["GET"])
@@ -612,16 +667,14 @@ def signup_seller():
         logging.error(f"Seller registration error: {e}")
         return jsonify({"error": "Server error"}), 500
 
-# ---------- User Location and Nearby sellers ----------
 
-# Add this new route to your Flask backend
+# ---------- User Location and Nearby sellers ----------
 @app.route("/get-user-location", methods=["GET"])
 @jwt_required()
 def get_user_location():
     try:
         user_email = get_jwt_identity()
 
-        # Check which collection the user belongs to
         user_data = buyers_collection.find_one({"email": user_email})
         if not user_data:
             user_data = sellers_collection.find_one({"email": user_email})
@@ -629,7 +682,6 @@ def get_user_location():
         if not user_data:
             return jsonify({"error": "User not found"}), 404
 
-        # Check if user has saved location
         last_location = user_data.get("last_location")
 
         if last_location and "lat" in last_location and "lon" in last_location:
@@ -768,28 +820,28 @@ def logout():
     except Exception as e:
         logging.error(f"Logout error: {e}")
         return jsonify({"error": "Logout failed"}), 500
-    
 
-#------------------ Fake Payments -----------------------------
+
+# ------------------ Fake Payments -----------------------------
 DELIVERY_FEE = 20
+
 
 def process_fake_payment_result(order_id, user_id, was_successful):
     if was_successful:
         orders_collection.update_one(
             {"_id": ObjectId(order_id), "status": "Awaiting Payment"},
-            {"$set": {"status": "Pending"}}
+            {"$set": {"status": "Pending"}},
         )
         carts_collection.update_one(
-            {"buyer_id": user_id, "status": "active"},
-            {"$set": {"status": "completed"}}
+            {"buyer_id": user_id, "status": "active"}, {"$set": {"status": "completed"}}
         )
         logging.info(f"✅ FAKE-WEBHOOK: Order {order_id} marked as Pending.")
     else:
         orders_collection.update_one(
-            {"_id": ObjectId(order_id)},
-            {"$set": {"status": "Payment Failed"}}
+            {"_id": ObjectId(order_id)}, {"$set": {"status": "Payment Failed"}}
         )
         logging.info(f"❌ FAKE-WEBHOOK: Order {order_id} marked as failed.")
+
 
 @app.route("/fake_payment/initiate", methods=["POST"])
 @jwt_required()
@@ -806,7 +858,10 @@ def initiate_fake_payment():
         if not cart.get("items"):
             return jsonify({"error": "Your cart has no items."}), 400
 
-        total_amount = sum(item["price"] * item["quantity"] for item in cart["items"]) + DELIVERY_FEE
+        total_amount = (
+            sum(item["price"] * item["quantity"] for item in cart["items"])
+            + DELIVERY_FEE
+        )
         preliminary_order = {
             "order_id": f"FAKE-KS{int(datetime.now(timezone.utc).timestamp())}",
             "buyer_id": user["_id"],
@@ -815,35 +870,45 @@ def initiate_fake_payment():
             "item_count": sum(item["quantity"] for item in cart["items"]),
             "total_amount": total_amount,
             "status": "Awaiting Payment",
-            "order_date": datetime.now(timezone.utc)
+            "order_date": datetime.now(timezone.utc),
         }
 
         result = orders_collection.insert_one(preliminary_order)
         order_id = str(result.inserted_id)
 
-        logging.info(f"⏳ FAKE-PAYMENT: Initiating payment for order {order_id}. Waiting 3 seconds...")
+        logging.info(
+            f"⏳ FAKE-PAYMENT: Initiating payment for order {order_id}. Waiting 3 seconds..."
+        )
         time.sleep(3)
 
         payment_succeeded = random.random() < 0.8
         process_fake_payment_result(order_id, user["_id"], payment_succeeded)
 
         if payment_succeeded:
-            return jsonify({
-                "message": "Payment Successful!",
-                "success": True,
-                "redirect": "/myorders",
-                "order_id": order_id
-            })
+            return jsonify(
+                {
+                    "message": "Payment Successful!",
+                    "success": True,
+                    "redirect": "/myorders",
+                    "order_id": order_id,
+                }
+            )
         else:
-            return jsonify({
-                "error": "Payment Failed. Please try another payment method.",
-                "success": False
-            }), 400
+            return (
+                jsonify(
+                    {
+                        "error": "Payment Failed. Please try another payment method.",
+                        "success": False,
+                    }
+                ),
+                400,
+            )
 
     except Exception as e:
         logging.error(f"Error in fake payment: {e}", exc_info=True)
         return jsonify({"error": "An internal server error occurred."}), 500
-    
+
+
 # -------------------------- ORDER MANAGEMENT --------------------------------
 @app.route("/order/create", methods=["POST"])
 @jwt_required()
@@ -858,7 +923,7 @@ def create_order():
         cart = carts_collection.find_one({"buyer_id": user["_id"], "status": "active"})
         if not cart or not cart.get("items"):
             return jsonify({"error": "Your cart is empty."}), 400
-        
+
         # Get payment method from the frontend request
         data = request.get_json()
         payment_method = data.get("payment_method", "Not Specified")
@@ -870,29 +935,28 @@ def create_order():
 
         # Create the new order document
         new_order = {
-            "order_id": f"KS{int(datetime.now(timezone.utc).timestamp())}", # Simple unique ID
+            "order_id": f"KS{int(datetime.now(timezone.utc).timestamp())}",  # Simple unique ID
             "buyer_id": user["_id"],
-            "buyer_name": user.get("fullName", "Unknown"), # Get buyer's name
+            "buyer_name": user.get("fullName", "Unknown"),  # Get buyer's name
             "items": cart["items"],
             "item_count": sum(item["quantity"] for item in cart["items"]),
             "total_amount": total_amount,
             "payment_method": payment_method,
             "status": "Pending",  # Default status for a new order
-            "order_date": datetime.now(timezone.utc)
+            "order_date": datetime.now(timezone.utc),
         }
         orders_collection.insert_one(new_order)
 
         # Mark the cart as "completed" so it's no longer active
         carts_collection.update_one(
-            {"_id": cart["_id"]},
-            {"$set": {"status": "completed"}}
+            {"_id": cart["_id"]}, {"$set": {"status": "completed"}}
         )
 
         # Respond with success and where to redirect the user
-        return jsonify({
-            "message": "Order placed successfully!",
-            "redirect": "/myorders"
-        }), 201 # 201 = Created
+        return (
+            jsonify({"message": "Order placed successfully!", "redirect": "/myorders"}),
+            201,
+        )  # 201 = Created
 
     except Exception as e:
         logging.error(f"Error creating order: {e}", exc_info=True)
@@ -907,9 +971,11 @@ def convert_mongo_types(obj):
     elif isinstance(obj, ObjectId):
         return str(obj)
     elif isinstance(obj, datetime):
-        return obj.strftime("%d/%m/%Y")  # or "%Y-%m-%d %H:%M:%S" if needed
+        return obj.strftime("%d/%m/%Y")
     else:
         return obj
+
+
 @app.route("/orders/get", methods=["GET"])
 @jwt_required()
 def get_my_orders():
@@ -919,7 +985,9 @@ def get_my_orders():
         if not user:
             return jsonify({"error": "User not found"}), 404
 
-        orders_cursor = orders_collection.find({"buyer_id": user["_id"]}).sort("order_date", -1)
+        orders_cursor = orders_collection.find({"buyer_id": user["_id"]}).sort(
+            "order_date", -1
+        )
 
         orders_list = []
         for order in orders_cursor:
@@ -931,6 +999,7 @@ def get_my_orders():
     except Exception as e:
         logging.error(f"Error fetching orders: {e}", exc_info=True)
         return jsonify({"error": "Server error while fetching orders"}), 500
-    
+
+
 if __name__ == "__main__":
     app.run(debug=True)

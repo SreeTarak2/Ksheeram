@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   let cart = [];
-  url = "http://127.0.0.1:5000";
+  const url = "http://127.0.0.1:5000";
 
   // API helper function
   const apiCall = async (url, options = {}) => {
@@ -51,8 +51,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  const productGrid = document.getElementById("product-grid");
-  if (!productGrid) return;
+  // Target both nearby and other product grids
+  const nearbyProductGrid = document.getElementById("nearby-product-grid");
+  const otherProductGrid = document.getElementById("other-product-grid");
+
+  if (!nearbyProductGrid && !otherProductGrid) return;
 
   const addToCart = async (product) => {
     try {
@@ -94,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const markAddedButtons = () => {
-    const buttons = productGrid.querySelectorAll(".add-to-cart-btn");
+    const buttons = document.querySelectorAll(".add-to-cart-btn");
 
     buttons.forEach((btn) => {
       const sellerId = btn.dataset.sellerId;
@@ -117,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
-  productGrid.addEventListener("click", async (e) => {
+  const handleAddToCart = async (e) => {
     const button = e.target.closest(".add-to-cart-btn");
     if (!button || button.classList.contains("added")) return;
 
@@ -144,7 +147,16 @@ document.addEventListener("DOMContentLoaded", () => {
       button.innerHTML = originalText;
       button.disabled = false;
     }
-  });
+  };
+
+  // Attach event listeners to both grids
+  if (nearbyProductGrid) {
+    nearbyProductGrid.addEventListener("click", handleAddToCart);
+  }
+
+  if (otherProductGrid) {
+    otherProductGrid.addEventListener("click", handleAddToCart);
+  }
 
   loadCart();
 });
