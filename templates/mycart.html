@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>My Shopping Cart - Ksheeram</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="../static/css/style.css" />
+</head>
+
+<body data-theme="dark-theme">
+    <header class="main-header">
+        <div class="container header-content">
+            <a href="/home" class="logo" aria-label="Ksheeram Home">
+                <img src="../static/images/iconLogo.png" alt="Ksheeram Logo">
+                <h2 class="logo_title">Ksheer<span>am</span></h2>
+            </a>
+            <nav class="main-nav">
+                <a href="/home" class="nav-link">Home</a>
+                <a href="/sellers" class="nav-link">Sellers</a>
+                <a href="/products" class="nav-link">Products</a>
+                <a href="/myorders" class="nav-link">My Orders</a>
+                <a href="/myaccount" class="nav-link">My Account</a>
+            </nav>
+            <div class="header-actions">
+                <a id="mycart" class="mycart" href="/mycart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-count" class="cart-count">0</span>
+                </a>
+                <label class="switch" for="theme-toggle-checkbox" aria-label="Toggle Theme">
+                    <input type="checkbox" id="theme-toggle-checkbox">
+                    <span class="slider"></span>
+                </label>
+                <a href="/logout" class="logout-btn" id="logout-btn">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content container">
+        <div class="page-header">
+            <h1><i class="fas fa-shopping-cart"></i> My Shopping Cart</h1>
+            <p>Review your items and proceed to checkout.</p>
+        </div>
+
+        <!-- Cart layout shown only if cart has items -->
+        <div class="cart-layout" id="cart-layout">
+            <div class="cart-items-panel">
+                <ul class="cart-item-list" id="cart-item-list">
+                    <!-- JS will populate cart items here -->
+                </ul>
+            </div>
+
+            <div class="cart-summary-panel">
+                <h3>Order Summary</h3>
+                <div class="summary-line">
+                    <span>Subtotal</span>
+                    <span id="summary-subtotal">₹0.00</span>
+                </div>
+                <div class="summary-line">
+                    <span>Delivery Fee</span>
+                    <span id="summary-delivery">₹20.00</span>
+                </div>
+
+                <!-- Payment Options -->
+                <div class="payment-section">
+                    <h4>Payment Method</h4>
+                    <div class="payment-options-list">
+                        <div class="payment-option">
+                            <input type="radio" id="pay-upi" name="payment-method" value="upi" checked />
+                            <label for="pay-upi">
+                                <i class="fa-brands fa-google-pay"></i>
+                                <span>Pay with UPI</span>
+                            </label>
+                        </div>
+                        <div class="payment-option">
+                            <input type="radio" id="pay-card" name="payment-method" value="card" />
+                            <label for="pay-card">
+                                <i class="fas fa-credit-card"></i>
+                                <span>Credit / Debit Card</span>
+                            </label>
+                        </div>
+                        <div class="payment-option">
+                            <input type="radio" id="pay-cod" name="payment-method" value="cod" />
+                            <label for="pay-cod">
+                                <i class="fas fa-hand-holding-dollar"></i>
+                                <span>Cash on Delivery (COD)</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="summary-line total-line">
+                    <strong>Total</strong>
+                    <strong id="summary-total">₹0.00</strong>
+                </div>
+                <button class="btn btn-primary btn-full" id="checkout-btn" type="button">
+                    Proceed to Checkout
+                </button>
+                <a href="/products" class="continue-shopping-link">
+                    <i class="fas fa-arrow-left"></i> Continue Shopping
+                </a>
+            </div>
+        </div>
+
+        <!-- Empty cart message -->
+        <div class="empty-cart-message" id="empty-cart-message"
+            style="display: block; text-align:center; margin-top: 50px;">
+            <h2>Your cart is empty</h2>
+            <p>Looks like you haven't added any items to your cart yet.</p>
+            <a href="/products" class="btn btn-secondary">
+                Browse Products
+            </a>
+        </div>
+    </main>
+
+    <!-- Footer remains the same -->
+    <footer id="footer" class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <a href="/" class="logo">
+                        <h2 class="logo_title">Ksheer<span>am</span></h2>
+                    </a>
+                    <p>Bringing fresh, pure milk from our farmers to your doorstep every morning.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="/home" class="nav-link">Home</a></li>
+                        <li><a href="/sellers" class="nav-link">Sellers</a></li>
+                        <li><a href="/products" class="nav-link">Products</a></li>
+                        <li><a href="/myorders" class="nav-link">My Orders</a></li>
+                        <li><a href="/myaccount" class="nav-link">My Account</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact Us</h4>
+                    <ul class="contact-list">
+                        <li><i class="fas fa-phone"></i> +91 12345 67890</li>
+                        <li><i class="fas fa-envelope"></i> support@ksheeram.in</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 Ksheeram. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="../static/js/theme.js"></script>
+    <script src="../static/js/cart.js"></script>
+    <script src="../static/js/logout.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ksheeram - Experience Freshness. Delivered.</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <link rel="stylesheet" href="../static/css/index.css" />
+</head>
+
+<body class="dark-theme">
+
+    <!-- ======================= FLOATING HEADER ======================= -->
+    <div class="header-container">
+        <header class="main-header">
+            <div class="container">
+                <a href="/" class="logo" aria-label="Ksheeram Home">
+                    <img src="../static/images/iconLogo.png" alt="Ksheeram Logo">
+                    <h2 class="logo_title">Ksheer<span>am</span></h2>
+                </a>
+                <!-- menu bar -->
+                <div class="hamburger" id="hamburger-icon">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="#hero">Home</a></li>
+                        <li><a href="#how">Process</a></li>
+                        <li><a href="#partners">Sellers</a></li>
+                        <li><a href="#products">Products</a></li>
+                    </ul>
+                </nav>
+                <div class="header-actions">
+                    <a href="#" class="login-btn" id="login-btn">Log In</a>
+                    <a href="#" class="btn-primary" id="signup-btn">Sign Up</a>
+                    <label class="switch" for="theme-toggle-checkbox" aria-label="Toggle Theme">
+                        <input type="checkbox" id="theme-toggle-checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </header>
+    </div>
+
+    <main>
+        <!-- ======================= HERO SECTION (VIDEO BACKGROUND) ======================= -->
+        <section id="hero" class="hero-section">
+            <div class="hero-video-wrapper">
+                <video playsinline autoplay muted loop
+                    class="hero-video" aria-label="A background video of a cow in a green meadow.">
+                    <source src="../static/images/mainvideo.mp4"
+                        type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="hero-overlay">
+                <div class="container">
+                    <div class="hero-content">
+                        <h1 class="hero-title">Purity. Delivered Daily.</h1>
+                        <p class="hero-subtitle">
+                            Connect with local dairy farms and get 100% fresh, unadulterated milk and products delivered
+                            to your door with OTP-verified security.
+                        </p>
+                        <form class="cta-form">
+                            <i class="fas fa-map-marker-alt input-icon"></i>
+                            <input type="text" placeholder="Enter your Pincode to start" required />
+                            <button type="button" class="btn-primary" id="open-login-modal-btn">Find Farms</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================= HOW IT WORKS (VISUAL JOURNEY) ======================= -->
+        <section id="how" class="section section-how">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Your Daily Freshness Journey</h2>
+                    <p>A seamless, transparent, and secure process from the farm to your family.</p>
+                </div>
+                <div class="steps-container">
+                    <div class="step-item">
+                        <div class="step-icon"><i class="fas fa-search-location"></i></div>
+                        <h3 class="step-title">1. Discover</h3>
+                        <p class="step-description">Enter your location to find trusted, verified dairy farms and
+                            sellers in your community.</p>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="step-item">
+                        <div class="step-icon"><i class="fas fa-star-half-alt"></i></div>
+                        <h3 class="step-title">2. Select</h3>
+                        <p class="step-description">Browse ratings, products, and reviews to choose the perfect dairy
+                            partner for your needs.</p>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="step-item">
+                        <div class="step-icon"><i class="fas fa-shield-halved"></i></div>
+                        <h3 class="step-title">3. Secure</h3>
+                        <p class="step-description">Your delivery is confirmed via a secure OTP, ensuring it always
+                            reaches you and only you.</p>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="step-item">
+                        <div class="step-icon"><i class="fas fa-glass-whiskey"></i></div>
+                        <h3 class="step-title">4. Enjoy</h3>
+                        <p class="step-description">Wake up to the taste of pure, fresh milk and dairy products at your
+                            doorstep. It's that simple.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================= SELLERS SECTION (AURORA UI) ======================= -->
+        <section id="partners" class="section section-partners">
+            <div class="aurora-background"></div>
+            <div class="container">
+                <div class="section-header">
+                    <h2>Our Community of Trusted Farmers</h2>
+                    <p>We partner with real people who are passionate about quality. No middlemen, no compromises.</p>
+                </div>
+                <div class="partner-carousel">
+                    <div class="partner-card">
+                        <div class="partner-card-image">
+                            <img src="https://images.unsplash.com/photo-1560493676-04071c5f467b?auto=format&fit=crop&w=600&q=80"
+                                alt="Sri Lakshmi Dairy Farms" />
+                        </div>
+                        <div class="partner-card-content">
+                            <span class="partner-verified"><i class="fas fa-check-circle"></i> Verified Partner</span>
+                            <h3 class="partner-name">Sri Lakshmi Dairy</h3>
+                            <p class="partner-location"><i class="fas fa-map-marker-alt"></i> Guntur, AP</p>
+                            <div class="partner-rating">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                        class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                                </div>
+                                <span class="rating-text">4.9 (120+ reviews)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="partner-card">
+                        <div class="partner-card-image"><img
+                                src="https://images.unsplash.com/photo-1603954396058-218b39d15194?auto=format&fit=crop&w=600&q=80"
+                                alt="Rythu Nest Milk" /></div>
+                        <div class="partner-card-content">
+                            <span class="partner-verified"><i class="fas fa-check-circle"></i> Verified Partner</span>
+                            <h3 class="partner-name">Rythu Nest Milk</h3>
+                            <p class="partner-location"><i class="fas fa-map-marker-alt"></i> Vijayawada, AP</p>
+                            <div class="partner-rating">
+                                <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                        class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                </div><span class="rating-text">5.0 (95+ reviews)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="locked-card">
+                        <i class="fas fa-lock"></i>
+                        <p>+5 More Sellers</p>
+                        <span>Sign Up to See</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================= FARMSTEAD PRODUCTS SECTION (CORRECTED) ======================= -->
+        <section id="products" class="section section-products">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Farmstead Essentials</h2>
+                    <p>Explore a curated selection of pure dairy products, handcrafted by our trusted partners.</p>
+                </div>
+                <div class="product-grid">
+                    <div class="product-card">
+                        <div class="product-image"><img
+                                src="https://media.istockphoto.com/id/1187181045/photo/pure-or-desi-ghee-clarified-melted-butter-healthy-fats-bulletproof-diet-concept-or-paleo.jpg?s=612x612&w=0&k=20&c=5Zmc6rSTKGoAUPbLIklt7YUNDKt2d3Zx9HcnN3cGwS0="
+                                alt="Artisanal Ghee" /></div>
+                        <div class="product-info">
+                            <h3 class="product-title">Artisanal Ghee</h3>
+                            <p class="product-source">From Sri Lakshmi Dairy</p>
+                        </div>
+                        <a href="#" class="product-action-btn" aria-label="View details for Artisanal Ghee"><i
+                                class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image"><img
+                                src="https://www.between2kitchens.com/wp-content/uploads/2021/09/Paneer-cubes-on-cutting-board-edited-19-of-1-1.jpg"
+                                alt="Fresh Paneer" /></div>
+                        <div class="product-info">
+                            <h3 class="product-title">Fresh Paneer</h3>
+                            <p class="product-source">From Amma Dairy</p>
+                        </div>
+                        <a href="#" class="product-action-btn" aria-label="View details for Fresh Paneer"><i
+                                class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image"><img
+                                src="https://cdn.britannica.com/27/122027-050-EAA86783/Butter.jpg"
+                                alt="Farmstead Butter" /></div>
+                        <div class="product-info">
+                            <h3 class="product-title">Farmstead Butter</h3>
+                            <p class="product-source">From Rythu Nest Milk</p>
+                        </div>
+                        <a href="#" class="product-action-btn" aria-label="View details for Farmstead Butter"><i
+                                class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ======================= FOOTER (RESTORED) ======================= -->
+    <footer id="footer" class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <a href="/" class="logo">
+                        <h2 class="logo_title">Ksheer<span>am</span></h2>
+                    </a>
+                    <p>Bringing fresh, pure milk from our farmers to your doorstep every morning.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#hero">Home</a></li>
+                        <li><a href="#partners">Sellers</a></li>
+                        <li><a href="#products">Products</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact Us</h4>
+                    <ul class="contact-list">
+                        <li><i class="fas fa-phone"></i> +91 12345 67890</li>
+                        <li><i class="fas fa-envelope"></i> support@ksheeram.in</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 Ksheeram. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ======================= SCROLL-TO-TOP BUTTON (RESTORED) ======================= -->
+    <a href="#hero" class="scroll-top-btn" aria-label="Scroll to top"><i class="fas fa-arrow-up"></i></a>
+
+    <!-- ======================= LOGIN MODAL (RESTORED) ======================= -->
+    <div id="login-modal" class="modal-overlay">
+        <div class="modal-container">
+            <button class="modal-close-btn" aria-label="Close modal">×</button>
+            <div id="login-role-selection" class="modal-form-container">
+                <h2>Welcome Back!</h2>
+                <p class="subtitle">Please select your role to sign in.</p>
+                <button class="modal-btn modal-btn-role" data-role="buyer">Sign in as Buyer</button>
+                <button class="modal-btn modal-btn-role" data-role="seller">Sign in as Seller</button>
+                <div class="modal-switch-link">Don't have an account? <a id="switch-to-register">Register here</a></div>
+            </div>
+            <div id="buyer-login-form-container" class="modal-form-container hidden">
+                <h2>Buyer Login</h2>
+                <form id="buyer-login-form">
+                    <div class="modal-input-group"><label for="login-buyer-email">Email or Username</label><input
+                            type="text" id="login-buyer-email" name="email" required></div>
+                    <div class="modal-input-group"><label for="login-buyer-password">Password</label><input
+                            type="password" id="login-buyer-password" name="password" required></div>
+                    <div class="form-error-message"></div>
+                    <button type="submit" class="modal-btn buyer" id="buyer-login-btn">Login</button>
+                    <div class="modal-form-footer"><a href="#" class="modal-back-link"
+                            data-target="login-role-selection">← Switch Role</a><a href="#">Forgot Password?</a></div>
+                </form>
+            </div>
+            <div id="seller-login-form-container" class="modal-form-container hidden">
+                <h2>Seller Login</h2>
+                <form id="seller-login-form">
+                    <div class="modal-input-group"><label for="login-seller-email">Store ID or Email</label><input
+                            type="text" id="login-seller-email" name="email" required></div>
+                    <div class="modal-input-group"><label for="login-seller-password">Password</label><input
+                            type="password" id="login-seller-password" name="password" required></div>
+                    <div class="form-error-message"></div>
+                    <button type="submit" class="modal-btn seller" id="seller-login-btn">Login</button>
+                    <div class="modal-form-footer"><a href="#" class="modal-back-link"
+                            data-target="login-role-selection">← Switch Role</a><a href="#">Forgot Password?</a></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================= REGISTER MODAL (RESTORED) ======================= -->
+    <div id="register-modal" class="modal-overlay">
+        <div class="modal-container">
+            <button class="modal-close-btn" aria-label="Close modal">×</button>
+            <div id="register-role-selection" class="modal-form-container">
+                <h2>Create Your Account</h2>
+                <p class="subtitle">Choose your role to begin registration.</p>
+                <button class="modal-btn modal-btn-role" data-role="buyer">Register as Buyer</button>
+                <button class="modal-btn modal-btn-role" data-role="seller">Register as Seller</button>
+                <div class="modal-switch-link">Already have an account? <a id="switch-to-login">Login here</a></div>
+            </div>
+            <div id="buyer-register-form-container" class="modal-form-container hidden">
+                <h2>Buyer Registration</h2>
+                <form id="buyer-register-form">
+                    <div class="modal-input-group"><label for="reg-buyer-name">Full Name</label><input type="text"
+                            id="reg-buyer-name" required /></div>
+                    <div class="modal-input-group"><label for="reg-buyer-email">Email</label><input type="email"
+                            id="reg-buyer-email" required /></div>
+                    <div class="modal-input-group"><label for="reg-buyer-phone">Phone Number</label><input type="tel"
+                            id="reg-buyer-phone" pattern="[6-9]{1}[0-9]{9}" required /></div>
+                    <div class="modal-input-group"><label for="reg-buyer-password">Password</label><input
+                            type="password" id="reg-buyer-password" required /></div>
+                    <div class="modal-input-group"><label for="reg-buyer-confirm-password">Confirm
+                            Password</label><input type="password" id="reg-buyer-confirm-password" required /></div>
+                    <div class="form-error-message"></div>
+                    <button type="submit" class="modal-btn buyer" id="buyer-register-btn">Register</button>
+                    <div class="modal-form-footer"><a href="#" class="modal-back-link"
+                            data-target="register-role-selection">← Switch Role</a></div>
+                </form>
+            </div>
+            <div id="seller-register-form-container" class="modal-form-container hidden">
+                <h2>Seller Registration</h2>
+                <form id="seller-register-form">
+                    <div class="modal-input-group"><label for="reg-seller-store">Store Name</label><input type="text"
+                            id="reg-seller-store" required /></div>
+                    <div class="modal-input-group"><label for="reg-seller-email">Email</label><input type="email"
+                            id="reg-seller-email" required /></div>
+                    <div class="modal-input-group"><label for="reg-seller-phone">Phone Number</label><input type="tel"
+                            id="reg-seller-phone" pattern="[6-9]{1}[0-9]{9}" required /></div>
+                    <div class="modal-input-group"><label for="reg-seller-password">Password</label><input
+                            type="password" id="reg-seller-password" required /></div>
+                    <div class="form-error-message"></div>
+                    <div class="modal-input-group"><label for="reg-seller-password">Confirm Password</label><input
+                            type="password" id="reg-seller-confirm-password" required /></div>
+                    <div class="form-error-message"></div>
+                    <button type="submit" class="modal-btn seller" id="seller-register-btn">Register</button>
+                    <div class="modal-form-footer"><a href="#" class="modal-back-link"
+                            data-target="register-role-selection">← Switch Role</a></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const scrollTopBtn = document.querySelector('.scroll-top-btn');
+
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    scrollTopBtn.classList.add('visible');
+                } else {
+                    scrollTopBtn.classList.remove('visible');
+                }
+            });
+            // Select the hamburger icon and the navigation menu
+            const hamburgerIcon = document.getElementById('hamburger-icon');
+            const navMenu = document.querySelector('.main-nav');
+
+            // Toggle the navigation menu when the hamburger icon is clicked
+            hamburgerIcon.addEventListener('click', () => {
+                navMenu.classList.toggle('open');
+            });
+
+        });
+    </script>
+    <script src="../static/js/theme.js"></script>
+    <script src="../static/js/index.js"></script>
+    <script src="../static/js/login.js"></script>
+    <script src="../static/js/signup.js"></script>
+</body>
+
+</html>

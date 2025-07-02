@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ksheeram - Nearby Sellers</title>
+    <!-- Your existing CSS links are fine -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+
+<body data-theme="dark-theme">
+    <header class="main-header">
+        <div class="container header-content">
+            <a href="/home" class="logo" aria-label="Ksheeram Home">
+                <img src="{{ url_for('static', filename='images/iconLogo.png') }}" alt="Ksheeram Logo">
+                <h2 class="logo_title">Ksheer<span>am</span></h2>
+            </a>
+            <nav class="main-nav">
+                <a href="/home" class="nav-link">Home</a>
+                <a href="/sellers" class="nav-link">Sellers</a>
+                <a href="/products" class="nav-link">Products</a>
+                <a href="/myorders" class="nav-link">My Orders</a>
+                <a href="/myaccount" class="nav-link">My Account</a>
+            </nav>
+            <div class="header-actions">
+                <a id="mycart" class="mycart" href="/mycart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-count" class="cart-count">0</span>
+                </a>
+                <label class="switch" for="theme-toggle-checkbox" aria-label="Toggle Theme">
+                    <input type="checkbox" id="theme-toggle-checkbox">
+                    <span class="slider"></span>
+                </label>
+                <a href="/logout" class="logout-btn" id="logout-btn">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-store"></i> Nearby Sellers</h1>
+                <p>Find the best dairy suppliers in your area. All our partners are verified for quality and hygiene.
+                </p>
+            </div>
+            
+            <div class="filter-bar">
+                <span class="filter-label">Sort by:</span>
+                <a href="#" class="filter-pill active">Recommended</a>
+                <a href="#" class="filter-pill">Top Rated</a>
+                <a href="#" class="filter-pill">Nearest First</a>
+            </div>
+
+            <div class="card-grid" id="sellers-grid">
+                <!-- Skeleton Loader -->
+                <div class="card is-loading">
+                    <div class="banner"></div>
+                    <div class="avatar"></div>
+                    <div class="content">
+                        <h4></h4>
+                        <div class="seller-rating"></div>
+                        <p class="seller-bio"></p><a href="#" class="btn-primary"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer id="footer" class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <a href="/" class="logo">
+                        <h2 class="logo_title">Ksheer<span>am</span></h2>
+                    </a>
+                    <p>Bringing fresh, pure milk from our farmers to your doorstep every morning.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#hero">Home</a></li>
+                        <li><a href="#partners">Sellers</a></li>
+                        <li><a href="#products">Products</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact Us</h4>
+                    <ul class="contact-list">
+                        <li><i class="fas fa-phone"></i> +91 12345 67890</li>
+                        <li><i class="fas fa-envelope"></i> support@ksheeram.in</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 Ksheeram. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const cardGrid = document.getElementById("sellers-grid");
+
+            const displayMessage = (message, isError = false) => {
+                const messageClass = isError ? 'error-message' : 'info-message';
+                cardGrid.innerHTML = `<p class="${messageClass}">${message}</p>`;
+            };
+
+            const loadNearbySellers = async () => {
+                try {
+                    const locationRes = await fetch("/get-user-location");
+
+                    if (!locationRes.ok) {
+                        if (locationRes.status === 404) {
+                            displayMessage('Location not set. Please <a href="/home" style="color: var(--primary-color);">set your location</a> on the homepage to find nearby sellers.', true);
+                        } else {
+                            displayMessage('Could not retrieve your location. Please log in again.', true);
+                        }
+                        return;
+                    }
+                    const locationData = await locationRes.json();
+                    const { lat, lon } = locationData.location;
+
+                    const sellersRes = await fetch('/get-sellers-nearby', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ lat, lon }),
+                    });
+
+                    if (!sellersRes.ok) throw new Error(`Server responded with status: ${sellersRes.status}`);
+
+                    const data = await sellersRes.json();
+
+                    if (!data.sellers || data.sellers.length === 0) {
+                        displayMessage("No sellers found within 50km of your current location.", false);
+                        return;
+                    }
+
+                    const cardsHtml = data.sellers.map(seller => `
+                        <div class="card">
+                          <div class="banner">
+                            <img src="${seller.cover_image || 'https://placehold.co/800x300/DDDDDD/AAAAAA?text=Dairy+Shop'}" alt="Cover for ${seller.name}">
+                          </div>
+                          <div class="avatar">
+                            <img src="${seller.logo || 'https://placehold.co/100x100/CCCCCC/FFFFFF?text=Logo'}" alt="Logo for ${seller.name}">
+                          </div>
+                          <div class="content">
+                            <h4>${seller.storeName}</h4>
+                            <div class="seller-rating">
+                                <i class="fas fa-star"></i> ${seller.rating} | <i class="fas fa-route"></i> ${seller.distance} km away
+                            </div>
+                            <p class="seller-bio">${seller.description}</p>
+                            <a href="/sellers/${seller.id}" class="btn-primary">View Profile</a>
+                          </div>
+                        </div>
+                    `).join("");
+
+                    cardGrid.innerHTML = cardsHtml;
+
+                } catch (err) {
+                    console.error("Error loading sellers:", err);
+                    displayMessage("An error occurred while loading sellers. Please check your connection and try again.", true);
+                }
+            };
+            loadNearbySellers();
+        });
+    </script>
+    <script src="../static/js/cart.js"></script>
+    <script src="../static/js/theme.js"></script>
+    <script src="../static/js/product.js"></script>
+    <script src="../static/js/logout.js"></script>
+
+</body>
+
+</html>

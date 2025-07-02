@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ksheeram - Buyer Dashboard</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <link rel="stylesheet" href="../static/css/home.css" />
+</head>
+
+<body data-theme="dark-theme">
+
+    <header class="main-header">
+        <div class="container header-content">
+            <a href="/home" class="logo" aria-label="Ksheeram Home">
+                <img src="../static/images/iconLogo.png" alt="Ksheeram Logo">
+                <h2 class="logo_title">Ksheer<span>am</span></h2>
+            </a>
+            <nav class="main-nav">
+                <a href="/home" class="nav-link">Home</a>
+                <a href="/sellers" class="nav-link">Sellers</a>
+                <a href="/products" class="nav-link">Products</a>
+                <a href="/myorders" class="nav-link">My Orders</a>
+                <a href="/myaccount" class="nav-link">My Account</a>
+            </nav>
+            <div class="header-actions">
+                <a id="mycart" class="mycart" href="/mycart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-count" class="cart-count">0</span>
+                </a>
+                <label class="switch" for="theme-toggle-checkbox" aria-label="Toggle Theme">
+                    <input type="checkbox" id="theme-toggle-checkbox">
+                    <span class="slider"></span>
+                </label>
+                <a href="/logout" class="logout-btn" id="logout-btn">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ======================= LOCATION MODAL ======================= -->
+    <div class="location-modal active" id="locationModal">
+        <div class="location-modal-content">
+            <h3><i class="fas fa-map-marker-alt"></i> Set Your Delivery Location</h3>
+            <p>This helps us find the best sellers near you.</p>
+            <div class="location-search">
+                <input type="text" id="locationInput" placeholder="Enter Pincode or Address...">
+                <i class="fas fa-search"></i>
+            </div>
+            <button class="current-location-btn" id="currentLocationBtn">
+                <i class="fas fa-location-crosshairs"></i> Use My Current Location
+            </button>
+            <button class="confirm-location-btn" id="confirmLocation">Confirm Location</button>
+        </div>
+    </div>
+
+    <!-- ======================= MAIN DASHBOARD ======================= -->
+    <main class="main-content">
+        <div class="container">
+            <div class="status-bar">
+                <div class="status-greeting">
+                    <h2>Welcome Back, Buyer!</h2>
+                    <p>Ready to order some fresh dairy?</p>
+                </div>
+                <div class="status-location" id="locationDisplay">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div class="location-details">
+                        <span>Current Location</span>
+                        <strong id="currentLocationText">Set your location</strong>
+                    </div>
+                    <button class="change-location-btn" id="changeLocationBtn">Change</button>
+                </div>
+            </div>
+
+            <div class="workspace-grid">
+                <div class="sellers-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-users"></i> Nearby Sellers</h3>
+                        <a href="/sellers" class="view-all-link">View All <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="sellers-list" id="sellersList">
+                        <div class="list-placeholder">
+                            <div class="spinner"></div>
+                            <span>Finding sellers...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="map-section">
+                    <div id="map"></div>
+                </div>
+            </div>
+
+            <div class="services-section">
+                <div class="section-header">
+                    <h3>Quick Actions</h3>
+                </div>
+                <div class="services-grid">
+                    <a href="#" class="service-card">
+                        <div class="service-icon"><i class="fas fa-shopping-basket"></i></div>
+                        <h4>Browse All Products</h4>
+                        <p>Discover fresh milk, ghee, paneer, and more.</p>
+                    </a>
+                    <a href="#" class="service-card">
+                        <div class="service-icon"><i class="fas fa-sync-alt"></i></div>
+                        <h4>My Subscriptions</h4>
+                        <p>Manage your daily and weekly deliveries with ease.</p>
+                    </a>
+                    <a href="#" class="service-card">
+                        <div class="service-icon"><i class="fas fa-tags"></i></div>
+                        <h4>Deals & Offers</h4>
+                        <p>Check out the latest discounts available for you.</p>
+                    </a>
+                    <a href="#" class="service-card">
+                        <div class="service-icon"><i class="fas fa-headset"></i></div>
+                        <h4>Support Center</h4>
+                        <p>Get help with your orders or account.</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer id="footer" class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <a href="/" class="logo">
+                        <h2 class="logo_title">Ksheer<span>am</span></h2>
+                    </a>
+                    <p>Bringing fresh, pure milk from our farmers to your doorstep every morning.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#hero">Home</a></li>
+                        <li><a href="#partners">Sellers</a></li>
+                        <li><a href="#products">Products</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact Us</h4>
+                    <ul class="contact-list">
+                        <li><i class="fas fa-phone"></i> +91 12345 67890</li>
+                        <li><i class="fas fa-envelope"></i> support@ksheeram.in</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 Ksheeram. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="../static/js/theme.js"></script>
+    <script src="../static/js/home.js"></script>
+    <script src="../static/js/cartcount.js"></script>
+    <script src="../static/js/logout.js"></script>
+</body>
+
+</html>

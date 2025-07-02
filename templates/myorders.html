@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- CORRECTED: Title is now user-centric -->
+    <title>My Order History - Ksheeram</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <!-- CORRECTED: Using url_for for robust linking -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+
+<body data-theme="dark-theme">
+
+    <header class="main-header">
+        <div class="container header-content">
+            <a href="/home" class="logo" aria-label="Ksheeram Home">
+                <!-- CORRECTED: Using url_for for robust linking -->
+                <img src="{{ url_for('static', filename='images/iconLogo.png') }}" alt="Ksheeram Logo">
+                <h2 class="logo_title">Ksheer<span>am</span></h2>
+            </a>
+            <nav class="main-nav">
+                <a href="/home" class="nav-link">Home</a>
+                <a href="/sellers" class="nav-link">Sellers</a>
+                <a href="/products" class="nav-link">Products</a>
+                <a href="/myorders" class="nav-link active">My Orders</a>
+                <a href="/myaccount" class="nav-link">My Account</a>
+            </nav>
+            <div class="header-actions">
+                <a id="mycart" class="mycart" href="/mycart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-count" class="cart-count">0</span>
+                </a>
+                <label class="switch" for="theme-toggle-checkbox" aria-label="Toggle Theme">
+                    <input type="checkbox" id="theme-toggle-checkbox">
+                    <span class="slider"></span>
+                </label>
+                <a href="/logout" class="logout-btn" id="logout-btn">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content container">
+        <!-- CORRECTED: Header text is now user-centric -->
+        <div class="page-header">
+            <h1>My Order History</h1>
+            <p>Review the status and details of all your past orders.</p>
+        </div>
+
+        <section class="content-panel">
+            <div class="panel-header">
+                <div class="filter-group">
+                    <label for="status-filter">Filter by status:</label>
+                    <select id="status-filter">
+                        <option value="all">All</option>
+                        <option value="pending">Pending</option>
+                        <option value="payment-failed">Payment Failed</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <!-- CORRECTED: Removed redundant "Customer" column -->
+                            <th>Date</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <!-- CORRECTED: Table body is now empty, ready to be populated by JavaScript -->
+                    <tbody>
+                        <!-- JavaScript will populate this section. A loading message can be shown by the JS. -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer id="footer" class="main-footer">
+        <!-- Footer remains the same, no corrections needed here -->
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <a href="/" class="logo">
+                        <h2 class="logo_title">Ksheer<span>am</span></h2>
+                    </a>
+                    <p>Bringing fresh, pure milk from our farmers to your doorstep every morning.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="/home">Home</a></li>
+                        <li><a href="/sellers">Sellers</a></li>
+                        <li><a href="/products">Products</a></li>
+                        <li><a href="/myorders">My Orders</a></li>
+                        <li><a href="/myaccount">My Account</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact Us</h4>
+                    <ul class="contact-list">
+                        <li><i class="fas fa-phone"></i> +91 12345 67890</li>
+                        <li><i class="fas fa-envelope"></i> support@ksheeram.in</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 Ksheeram. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/cartcount.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/myorders.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/logout.js') }}"></script>
+</body>
+
+</html>

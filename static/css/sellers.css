@@ -1,0 +1,707 @@
+/* ======================= PROFESSIONAL SELLER PROFILE V8 ======================= */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap");
+
+:root {
+  --font-heading: "Poppins", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --primary-color: #3b82f6;
+  --primary-hover: #2563eb;
+  --danger-color: #ef4444;
+  --accent-yellow: #f59e0b;
+  --accent-green: #10b981;
+  --transition-fast: all 0.2s ease-in-out;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.06),
+    0 2px 4px -2px rgb(0 0 0 / 0.06);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.07),
+    0 4px 6px -4px rgb(0 0 0 / 0.07);
+  --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #6d28d9 100%);
+}
+
+[data-theme="dark"] {
+  --text-primary: #f9fafb;
+  --text-secondary: #9ca3af;
+  --bg-primary: #111827;
+  --bg-secondary: #1f2937;
+  --bg-tertiary: #374151;
+  --border-color: #374151;
+}
+
+[data-theme="light"] {
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --bg-primary: #f9fafb;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f3f4f6;
+  --border-color: #e5e7eb;
+}
+
+/* ======================= BASE & APP LAYOUT ======================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+.app-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+}
+a {
+  text-decoration: none;
+  color: var(--primary-color);
+}
+
+/* ======================= HEADER ======================= */
+
+.header-container {
+  position: sticky;
+  top: 20px;
+  z-index: 1000;
+  padding: 0 20px;
+  margin-bottom: 20px;
+}
+
+.main-header {
+  max-width: 1280px;
+  margin: 15px auto;
+  background: var(--bg-header);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 50px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-lg);
+
+  transition: all 0.3s ease;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 65px;
+  padding: 0 1rem 0 1.5rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+.logo img {
+  height: 40px;
+}
+.logo_title span {
+  color: var(--primary-color);
+}
+
+.main-nav {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nav-link {
+  color: var(--text-secondary);
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.nav-link.active,
+.nav-link:hover {
+  color: var(--text-primary);
+  background-color: var(--bg-tertiary);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.theme-toggle {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+.theme-toggle:hover {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.logout-btn {
+  background: var(--primary-color);
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.logout-btn:hover {
+  background: var(--primary-hover);
+  box-shadow: 0 4px 10px -2px rgba(59, 130, 246, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Responsive adjustments for the floating header */
+@media (max-width: 768px) {
+  .header-container {
+    top: 10px;
+    padding: 0 10px;
+    margin-bottom: 10px;
+  }
+  .main-nav {
+    display: none;
+  }
+  .header-content {
+    padding: 0 0.75rem 0 1rem;
+  }
+}
+
+/* ======================= ANIMATED THEME TOGGLE SWITCH ======================= */
+
+.switch {
+  display: block;
+  --width-of-switch: 3.5em;
+  --height-of-switch: 2em;
+  --size-of-icon: 1.4em;
+  --slider-offset: 0.3em;
+  position: relative;
+  width: var(--width-of-switch);
+  height: var(--height-of-switch);
+  margin: 0;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  transition: 0.4s;
+  border-radius: 30px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: var(--size-of-icon);
+  width: var(--size-of-icon);
+  border-radius: 50%;
+  left: var(--slider-offset);
+  top: 50%;
+  transform: translateY(-50%);
+
+  background: linear-gradient(40deg, #ffc107, #ff8c00 70%);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+input:checked + .slider {
+  background-color: #374151;
+}
+
+input:checked + .slider:before {
+  transform: translateY(-50%)
+    translateX(
+      calc(
+        var(--width-of-switch) - var(--size-of-icon) -
+          (2 * var(--slider-offset))
+      )
+    );
+  background: #f0f8ff;
+  box-shadow: inset -3px -2px 5px -2px #8983f7, inset -10px -4px 0 0 #a3dafb;
+}
+
+/* ======================= PROFILE HEADER ======================= */
+.profile-main {
+  padding: 2rem 20px;
+}
+.profile-header {
+  background-color: var(--bg-secondary);
+  border-radius: 1rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+}
+.cover-image {
+  height: 280px;
+}
+.cover-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 1rem 1rem 0 0;
+}
+.profile-header .header-content {
+  /* Reusing the classname, but for the profile header */
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 30px 20px 30px;
+  margin-top: -80px;
+  position: relative;
+}
+.seller-identity {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+}
+.seller-logo {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 6px solid var(--bg-secondary);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  background-color: var(--bg-secondary);
+}
+.seller-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.seller-title {
+  padding-bottom: 15px;
+}
+.seller-title h1 {
+  font-size: 2.25rem;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+.seller-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+.seller-meta i {
+  color: var(--primary-color);
+}
+.verified-badge {
+  color: var(--accent-green);
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.header-actions {
+  display: flex;
+  gap: 10px;
+  padding-bottom: 10px;
+}
+.contact-btn,
+.share-btn {
+  padding: 10px 20px;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.contact-btn:hover {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+/* ======================= PROFILE BODY LAYOUT ======================= */
+.profile-body {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 2rem;
+}
+.sidebar-widget,
+.content-widget {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 20px;
+}
+.sidebar-widget h3,
+.content-widget h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+/* ======================= SIDEBAR (LEFT) ======================= */
+.contact-info {
+  list-style: none;
+}
+.contact-info li {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  color: var(--text-secondary);
+}
+.contact-info i {
+  width: 20px;
+  text-align: center;
+  color: var(--primary-color);
+  margin-top: 4px;
+}
+.rating-summary {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.rating-score {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+.rating-score .star {
+  color: var(--accent-yellow);
+  font-size: 2.5rem;
+}
+.rating-breakdown p {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ======================= CONTENT (RIGHT) ======================= */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 2rem;
+}
+.tab-link {
+  padding: 0.75rem 0;
+  margin-right: 2rem;
+  border: none;
+  background: none;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  position: relative;
+}
+.tab-link.active {
+  color: var(--primary-color);
+}
+.tab-link::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background-color: var(--primary-color);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+.tab-link.active::after {
+  width: 100%;
+}
+.tab-content {
+  display: none;
+}
+.tab-content.active {
+  display: block;
+  animation: fadeIn 0.5s ease;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.plans-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+.plan-card {
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-primary);
+  transition: all 0.2s ease;
+}
+.plan-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+.plan-card.featured {
+  border-color: var(--primary-color);
+  transform: scale(1.03);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+}
+.featured-tag {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: var(--primary-color);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 2rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+.plan-header {
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+.plan-header h4 {
+  font-size: 1.3rem;
+}
+.plan-header span {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+.plan-features {
+  list-style: none;
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+.plan-features li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-secondary);
+}
+.plan-features i {
+  color: var(--accent-green);
+}
+.subscribe-btn {
+  padding: 0.8rem;
+  width: 100%;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  border: 1px solid var(--primary-color);
+  background-color: transparent;
+  color: var(--primary-color);
+  transition: var(--transition-fast);
+}
+.subscribe-btn.primary,
+.subscribe-btn:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+/* ======================= SELLER PROFILE - INDIVIDUAL PRODUCTS ======================= */
+/* This CSS should be ADDED to your existing seller-profile.css file */
+
+.products-grid {
+  display: grid;
+  /* Creates a responsive grid that fits as many cards as possible */
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.product-card {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.product-image {
+  height: 160px;
+  width: 100%;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image img {
+  transform: scale(1.05);
+}
+
+.product-details {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Allows the button to stick to the bottom */
+}
+
+.product-details h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.product-price {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  flex-grow: 1; /* Pushes the button down */
+}
+
+.add-to-cart-btn {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: none;
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: var(--transition-fast);
+}
+
+.add-to-cart-btn:hover {
+  background-color: var(--primary-hover);
+  transform: scale(1.03);
+}
+
+/* Optional: Added state for when an item is in the cart */
+.add-to-cart-btn.added {
+  background-color: var(--accent-green);
+}
+
+/* ======================= cart icon design ========================== */
+.mycart {
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+  font-size: 1.2rem;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+}
+
+.mycart:hover {
+  color: var(--primary-color);
+  transform: scale(1.1);
+}
+
+.cart-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--danger-color);
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+.cart-count.updated {
+  transform: translate(10%, -20%) scale(1.2);
+}
+
+/* ======================= RESPONSIVE ======================= */
+@media (max-width: 1024px) {
+  .profile-body {
+    grid-template-columns: 1fr;
+  }
+  .profile-header .header-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .header-actions {
+    margin-top: 1rem;
+  }
+  .seller-identity {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .seller-logo {
+    margin-bottom: 1rem;
+  }
+}
+@media (max-width: 768px) {
+  .main-nav {
+    display: none;
+  }
+  .plans-grid {
+    grid-template-columns: 1fr;
+  }
+  .seller-title h1 {
+    font-size: 1.8rem;
+  }
+  .cover-image {
+    height: 180px;
+  }
+  .profile-header .header-content {
+    margin-top: -60px;
+  }
+  .seller-logo {
+    width: 100px;
+    height: 100px;
+  }
+}

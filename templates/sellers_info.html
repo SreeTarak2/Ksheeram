@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ seller.name }} - Ksheeram</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sellers.css') }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+
+<body class="dark-theme">
+    <div class="app-container">
+        <header class="main-header">
+            <div class="container header-content">
+                <a href="/home" class="logo" aria-label="Ksheeram Home">
+                    <img src="{{ url_for('static', filename='images/iconLogo.png') }}" alt="Ksheeram Logo">
+                    <h2 class="logo_title">Ksheer<span>am</span></h2>
+                </a>
+                <nav class="main-nav">
+                    <a href="/home" class="nav-link">Home</a>
+                    <a href="/sellers" class="nav-link">Sellers</a>
+                    <a href="/products" class="nav-link">Products</a>
+                    <a href="/myorders" class="nav-link">My Orders</a>
+                    <a href="/myaccount" class="nav-link">My Account</a>
+                </nav>
+                <div class="header-actions">
+                    <a id="mycart" class="mycart" href="/mycart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cart-count" class="cart-count">0</span>
+                    </a>
+                    <label class="switch" for="theme-toggle-checkbox" aria-label="Toggle Theme">
+                        <input type="checkbox" id="theme-toggle-checkbox">
+                        <span class="slider"></span>
+                    </label>
+                    <a href="/logout" class="logout-btn" id="logout-btn">Logout</a>
+                </div>
+            </div>
+        </header>
+
+        <main class="profile-main">
+            <div class="profile-header">
+                <div class="cover-image">
+                    <img src="{{ seller.cover_image or url_for('static', filename='images/seller_covers/dairy_farm_1.jpg') }}"
+                        alt="Cover image of {{ seller.name }}">
+                </div>
+                <div class="header-content">
+                    <div class="seller-identity">
+                        <div class="seller-logo">
+                            <img src="{{ seller.logo or url_for('static', filename='images/seller_logos/default_dairy.png') }}"
+                                alt="{{ seller.name }} Logo">
+                        </div>
+                        <div class="seller-title">
+                            <h1>{{ seller.name }}</h1>
+                            <div class="seller-meta">
+                                <span><i class="fas fa-map-marker-alt"></i> {{ seller.location }}</span>
+                                <span class="verified-badge"><i class="fas fa-check-circle"></i> Verified Partner</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-body">
+                <div class="profile-sidebar">
+                    <div class="sidebar-widget">
+                        <h3>About the Seller</h3>
+                        <p>{{ seller.description }}</p>
+                        <ul class="contact-info">
+                            <li><i class="fas fa-user"></i> <strong>Owner:</strong> {{ seller.owner }}</li>
+                            <!-- <li><i class="fas fa-road"></i> <strong>Address:</strong> {{ seller.address }}</li> -->
+                        </ul>
+                    </div>
+                    <div class="sidebar-widget">
+                        <h3>Rating</h3>
+                        <div class="rating-display">
+                            <span class="rating-value">{{ seller.rating }}</span>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-content">
+                    <div class="content-widget">
+                        <div class="tabs">
+                            <button class="tab-link active" data-tab="plans" type="button">Subscription Plans</button>
+                            <button class="tab-link" data-tab="products" type="button">Individual Products</button>
+                        </div>
+
+                        <!-- Plans -->
+                        <div class="tab-content active" id="plans">
+                            {% if seller.plans %}
+                            <div class="plans-grid">
+                                {% for plan in seller.plans %}
+                                <div class="plan-card">
+                                    <div class="plan-header">
+                                        <h4>{{ plan.name }}</h4>
+                                        <span>{{ plan.price }}</span>
+                                    </div>
+                                    <ul class="plan-features">
+                                        {% for feature in plan.features %}
+                                        <li><i class="fas fa-check-circle"></i> {{ feature }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                    <p class="plan-description">{{ plan.description }}</p>
+                                    <button class="subscribe-btn" type="button" data-plan-name="{{ plan.name }}"
+                                        data-plan-price="{{ plan.price }}" data-seller-id="{{seller._id}}">Choose Plan</button>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <p>No subscription plans available from this seller.</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Products -->
+                        <div class="tab-content" id="products">
+                            {% if seller.products %}
+                            <div class="products-grid">
+                                {% for product in seller.products %}
+                                <div class="product-card">
+                                    <div class="product-image">
+                                        <img src="{{ product.image_url or url_for('static', filename='images/default_product.png') }}"
+                                            alt="{{ product.name }}">
+                                    </div>
+                                    <div class="product-details">
+                                        <h4>{{ product.name }}</h4>
+                                        <p class="product-price">₹{{ product.price }} / {{ product.unit }}</p>
+                                        <button class="add-to-cart-btn" id="add-to-cart-btn" type="button"
+                                            data-name="{{ product.name }}" data-seller-id="{{ seller._id }}">
+                                            <i class="fas fa-shopping-cart"></i> Add to Cart
+                                        </button>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <p>No individual products available from this seller.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer id="footer" class="main-footer">
+            <!-- Footer content is the same as other pages, omitted for brevity -->
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-col">
+                        <a href="/" class="logo">
+                            <h2 class="logo_title">Ksheer<span>am</span></h2>
+                        </a>
+                        <p>Bringing fresh, pure milk from our farmers to your doorstep every morning.</p>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Quick Links</h4>
+                        <ul>
+                            <li><a href="home.html">Home</a></li>
+                            <li><a href="sellers.html">Sellers</a></li>
+                            <li><a href="products.html">Products</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Contact Us</h4>
+                        <ul class="contact-list">
+                            <li><i class="fas fa-phone"></i> +91 12345 67890</li>
+                            <li><i class="fas fa-envelope"></i> support@ksheeram.in</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>© 2024 Ksheeram. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/cartcount.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/sellers_info.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/logout.js') }}"></script>
+
+    <!-- <script>
+        const tabLinks = document.querySelectorAll(".tab-link");
+        const tabContents = document.querySelectorAll(".tab-content");
+
+        tabLinks.forEach(link => {
+            link.addEventListener("click", () => {
+                const targetId = link.dataset.tab;
+
+                // Remove 'active' class from all tab links and contents
+                tabLinks.forEach(btn => btn.classList.remove("active"));
+                tabContents.forEach(tab => tab.classList.remove("active"));
+
+                // Add 'active' class to clicked tab and corresponding content
+                link.classList.add("active");
+                document.getElementById(targetId).classList.add("active");
+            });
+        });
+    </script> -->
+</body>
+
+</html>

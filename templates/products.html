@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ksheeram - All Products</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../static/css/style.css" />
+</head>
+
+<body data-theme="dark-theme">
+
+    <header class="main-header">
+        <div class="container header-content">
+            <a href="/home" class="logo" aria-label="Ksheeram Home">
+                <img src="../static/images/iconLogo.png" alt="Ksheeram Logo">
+                <h2 class="logo_title">Ksheer<span>am</span></h2>
+            </a>
+            <nav class="main-nav">
+                <a href="/home" class="nav-link">Home</a>
+                <a href="/sellers" class="nav-link">Sellers</a>
+                <a href="/products" class="nav-link">Products</a>
+                <a href="/myorders" class="nav-link">My Orders</a>
+                <a href="/myaccount" class="nav-link">My Account</a>
+            </nav>
+            <div class="header-actions">
+                <a id="mycart" class="mycart" href="/mycart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-count" class="cart-count">0</span>
+                </a>
+                <label class="switch" for="theme-toggle-checkbox" aria-label="Toggle Theme">
+                    <input type="checkbox" id="theme-toggle-checkbox">
+                    <span class="slider"></span>
+                </label>
+                <a href="/logout" class="logout-btn" id="logout-btn">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-shopping-basket"></i> Browse Products</h1>
+                <p>Discover fresh milk, ghee, paneer, and more from our network of trusted sellers.</p>
+            </div>
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <span class="filter-label">Filter by Category:</span>
+                <select id="category-filter">
+                    <option value="milk">Milk</option>
+                    <option value="ghee">Ghee</option>
+                    <option value="paneer">Paneer</option>
+                    <option value="curd">Curd</option>
+                </select>
+
+                <span class="filter-label">Sort by:</span>
+                <select id="sort-filter">
+                    <option value="recommended">Recommended</option>
+                    <option value="price_asc">Price: Low to High</option>
+                    <option value="price_desc">Price: High to Low</option>
+                    <option value="rating">Rating</option>
+                </select>
+            </div>
+
+            <!-- Product Grid -->
+            <div class="card-grid" id="product-grid">
+                {% if products %}
+                {% for product in products %}
+                <div class="product-card">
+                    <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-image">
+                    <div class="product-content">
+                        <h4>{{ product.name }}</h4>
+                        <p class="product-seller">From: {{ product.seller }}</p>
+                        <p class="product-rating">
+                            <i class="fas fa-star"></i> {{ product.ratings }} / 5
+                        </p>
+                        <div class="product-footer">
+                            <span class="product-price">₹{{ product.price }} / {{ product.unit }}</span>
+                            <button class="btn btn-primary add-to-cart-btn" data-product-name="{{ product.name }}"
+                                data-product-price="{{ product.price }}" data-product-seller="{{ product.seller }}"
+                                data-product-image="{{ product.image_url }}"
+                                data-seller-id = "{{product.id}}">
+                                <i class="fas fa-plus"></i> Add
+                            </button>
+
+                        </div>
+                    </div>
+                    <div class="stock-status">
+                        {% if product.in_stock %}
+                        <span class="in-stock">In Stock</span>
+                        {% else %}
+                        <span class="out-of-stock">Out of Stock</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="product-card">
+                    <p>No products available at the moment.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+
+    <footer id="footer" class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <a href="/" class="logo">
+                        <h2 class="logo_title">Ksheer<span>am</span></h2>
+                    </a>
+                    <p>Bringing fresh, pure milk from our farmers to your doorstep every morning.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="/home" class="nav-link">Home</a></li>
+                        <li><a href="/sellers" class="nav-link">Sellers</a></li>
+                        <li><a href="/products" class="nav-link">Products</a></li>
+                        <li><a href="/myorders" class="nav-link">My Orders</a></li>
+                        <li><a href="/myaccount" class="nav-link">My Account</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact Us</h4>
+                    <ul class="contact-list">
+                        <li><i class="fas fa-phone"></i> +91 12345 67890</li>
+                        <li><i class="fas fa-envelope"></i> support@ksheeram.in</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 Ksheeram. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../static/js/theme.js"></script>
+    <script src="../static/js/product.js"></script>
+    <script src="../static/js/cart.js"></script>
+    <script src="../static/js/logout.js"></script>
+    
+</body>
+
+</html>
