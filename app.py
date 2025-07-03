@@ -21,9 +21,8 @@ import random
 from seller_dashboard import seller_app
 
 app = Flask(__name__)
-app.register_blueprint(seller_app, url_prefix='/seller')
+app.register_blueprint(seller_app, url_prefix="/seller")
 CORS(app, supports_credentials=True)
-
 
 
 # Add these JWT configurations to your Flask app
@@ -43,7 +42,7 @@ base_url = "https://ksheeram.onrender.com"
 
 try:
     # client = MongoClient("mongodb://localhost:27017/")
-    client  = MongoClient(MONGO_URI,server_api=ServerApi('1'))
+    client = MongoClient(MONGO_URI, server_api=ServerApi("1"))
     db = client["ksheeram"]
     buyers_collection = db["buyers"]
     # sellers_info = db["sellers"]
@@ -61,12 +60,14 @@ except Exception as e:
 def index():
     return render_template("index.html")
 
+
 # home route
 @app.route("/home")
 @jwt_required()
 def home():
     user = get_jwt_identity()
     return render_template("home.html", user=user)
+
 
 # sellers route
 @app.route("/sellers")
@@ -350,6 +351,7 @@ def add_plan_to_cart():
 
 # --- UNIFIED Route to remove ANY item from the cart ---
 
+
 @app.route("/cart/remove", methods=["POST"])
 @jwt_required()
 def remove_from_cart():
@@ -599,6 +601,7 @@ def buyer_login():
 #         logging.error(f"Seller login error: {e}")
 #         return jsonify({"error": "Server error"}), 500
 
+
 # ---------- Buyer Registration ----------
 @app.route("/register/buyer", methods=["POST"])
 def signup_buyer():
@@ -624,15 +627,20 @@ def signup_buyer():
         }
         buyers_collection.insert_one(new_user)
 
-        access_token = create_access_token(identity=email, expires_delta=timedelta(days=1))
+        access_token = create_access_token(
+            identity=email, expires_delta=timedelta(days=1)
+        )
         cookie_expiry = timedelta(hours=1)
-        resp = jsonify({"message": "Registration successful", "redirect": f"{base_url}/home"})
+        resp = jsonify(
+            {"message": "Registration successful", "redirect": f"{base_url}/home"}
+        )
         set_access_cookies(resp, access_token, max_age=cookie_expiry)
         return resp
 
     except Exception as e:
         logging.error(f"Buyer registration error: {e}")
         return jsonify({"error": "Server error"}), 500
+
 
 # # ---------- Seller Registration ----------
 # @app.route("/register/seller", methods=["POST"])
@@ -670,6 +678,7 @@ def signup_buyer():
 #     except Exception as e:
 #         logging.error(f"Seller registration error: {e}")
 #         return jsonify({"error": "Server error"}), 500
+
 
 # ---------- User Location and Nearby sellers ----------
 @app.route("/get-user-location", methods=["GET"])
@@ -761,8 +770,8 @@ def get_sellers_nearby():
 
         # Query: Check for latitude and longitude fields
         query = {
-    "latitude": {"$exists": True, "$ne": None},
-    "longitude": {"$exists": True, "$ne": None}
+            "latitude": {"$exists": True, "$ne": None},
+            "longitude": {"$exists": True, "$ne": None},
         }
 
         # print(f"DEBUG: MongoDB Query: {query}")
@@ -832,6 +841,7 @@ def logout():
 # ------------------ Fake Payments -----------------------------
 DELIVERY_FEE = 20
 
+
 def process_fake_payment_result(order_id, user_id, was_successful):
     if was_successful:
         orders_collection.update_one(
@@ -847,6 +857,7 @@ def process_fake_payment_result(order_id, user_id, was_successful):
             {"_id": ObjectId(order_id)}, {"$set": {"status": "Payment Failed"}}
         )
         logging.info(f"❌ FAKE-WEBHOOK: Order {order_id} marked as failed.")
+
 
 # fake payment
 @app.route("/fake_payment/initiate", methods=["POST"])
@@ -870,7 +881,9 @@ def initiate_fake_payment():
             if seller_id not in sellers_orders:
                 sellers_orders[seller_id] = {"items": [], "subtotal": 0.0}
             sellers_orders[seller_id]["items"].append(item)
-            sellers_orders[seller_id]["subtotal"] += item.get("price", 0) * item.get("quantity", 1)
+            sellers_orders[seller_id]["subtotal"] += item.get("price", 0) * item.get(
+                "quantity", 1
+            )
 
         if not sellers_orders:
             return jsonify({"error": "No valid items in cart to process."}), 400
@@ -881,14 +894,17 @@ def initiate_fake_payment():
             "name": user.get("fullName", "N/A"),
             "email": user.get("email"),
             "phone": user.get("phone", "N/A"),
-            "address": user.get("last_location", {}).get("address", "Address not provided")
+            "address": user.get("last_location", {}).get(
+                "address", "Address not provided"
+            ),
         }
 
         for seller_id, order_data in sellers_orders.items():
-            total_for_this_seller = order_data['subtotal'] + DELIVERY_FEE
+            total_for_this_seller = order_data["subtotal"] + DELIVERY_FEE
             new_order = {
                 "order_id": f"KS{int(time.time())}-{random.randint(100, 999)}",
                 "seller_id": ObjectId(seller_id),
+                "buyer_id": user["_id"],
                 "buyer_info": user_info_for_seller,
                 "items": order_data["items"],
                 "total_amount": total_for_this_seller,
@@ -898,38 +914,47 @@ def initiate_fake_payment():
             result = orders_collection.insert_one(new_order)
             created_order_ids.append(result.inserted_id)
 
-        logging.info(f"⏳ FAKE-PAYMENT: Processing payment for {len(created_order_ids)} sub-orders.")
+        logging.info(
+            f"⏳ FAKE-PAYMENT: Processing payment for {len(created_order_ids)} sub-orders."
+        )
         time.sleep(2)
         payment_succeeded = random.random() < 0.9
 
         if payment_succeeded:
             orders_collection.update_many(
-                {"_id": {"$in": created_order_ids}},
-                {"$set": {"status": "Pending"}}
+                {"_id": {"$in": created_order_ids}}, {"$set": {"status": "Pending"}}
             )
             carts_collection.update_one(
                 {"_id": cart["_id"]}, {"$set": {"status": "completed"}}
             )
             logging.info(f"✅ FAKE-PAYMENT: SUCCESS for orders: {created_order_ids}")
-            return jsonify({
-                "message": "Payment Successful! Your order has been placed with each seller.",
-                "success": True,
-                "redirect": "/myorders"
-            })
+            return jsonify(
+                {
+                    "message": "Payment Successful! Your order has been placed with each seller.",
+                    "success": True,
+                    "redirect": "/myorders",
+                }
+            )
         else:
             orders_collection.update_many(
                 {"_id": {"$in": created_order_ids}},
-                {"$set": {"status": "Payment Failed"}}
+                {"$set": {"status": "Payment Failed"}},
             )
             logging.info(f"❌ FAKE-PAYMENT: FAILED for orders: {created_order_ids}")
-            return jsonify({
-                "error": "Payment Failed. Please try again.",
-                "success": False,
-            }), 400
+            return (
+                jsonify(
+                    {
+                        "error": "Payment Failed. Please try again.",
+                        "success": False,
+                    }
+                ),
+                400,
+            )
 
     except Exception as e:
         logging.error(f"Error in fake payment initiation: {e}", exc_info=True)
         return jsonify({"error": "An internal server error occurred."}), 500
+
 
 # -------------------------- ORDER MANAGEMENT --------------------------------
 @app.route("/order/create", methods=["POST"])
@@ -946,13 +971,11 @@ def create_order():
         if not cart or not cart.get("items"):
             return jsonify({"error": "Your cart is empty."}), 400
 
-        # Get payment method from the frontend request
         data = request.get_json()
         payment_method = data.get("payment_method", "Not Specified")
 
-        # --- IMPORTANT: Recalculate total on the server to prevent manipulation ---
         subtotal = sum(item["price"] * item["quantity"] for item in cart["items"])
-        delivery_fee = 20.00 
+        delivery_fee = 20.00
         total_amount = subtotal + delivery_fee
 
         # Create the new order document
@@ -964,25 +987,24 @@ def create_order():
             "item_count": sum(item["quantity"] for item in cart["items"]),
             "total_amount": total_amount,
             "payment_method": payment_method,
-            "status": "Pending",  # Default status for a new order
+            "status": "Pending",
             "order_date": datetime.now(timezone.utc),
         }
         orders_collection.insert_one(new_order)
 
-        # Mark the cart as "completed" so it's no longer active
         carts_collection.update_one(
             {"_id": cart["_id"]}, {"$set": {"status": "completed"}}
         )
 
-        # Respond with success and where to redirect the user
         return (
             jsonify({"message": "Order placed successfully!", "redirect": "/myorders"}),
             201,
-        )  # 201 = Created
+        )
 
     except Exception as e:
         logging.error(f"Error creating order: {e}", exc_info=True)
         return jsonify({"error": "Server error while creating order"}), 500
+
 
 # helper function
 def convert_mongo_types(obj):
@@ -997,6 +1019,7 @@ def convert_mongo_types(obj):
     else:
         return obj
 
+
 # order get
 @app.route("/orders/get", methods=["GET"])
 @jwt_required()
@@ -1007,9 +1030,9 @@ def get_my_orders():
         if not user:
             return jsonify({"error": "User not found"}), 404
 
-        orders_cursor = orders_collection.find({"buyer_id": user["_id"]}).sort(
-            "order_date", -1
-        )
+        orders_cursor = orders_collection.find(
+            {"$or": [{"buyer_id": user["_id"]}, {"buyer_info.buyer_id": user["_id"]}]}
+        ).sort("order_date", -1)
         orders_list = []
         for order in orders_cursor:
             order = convert_mongo_types(order)
@@ -1020,6 +1043,7 @@ def get_my_orders():
     except Exception as e:
         logging.error(f"Error fetching orders: {e}", exc_info=True)
         return jsonify({"error": "Server error while fetching orders"}), 500
+
 
 if __name__ == "__main__":
     app.run(debug=True)

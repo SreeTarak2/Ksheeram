@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await response.json();
             allOrders = data.orders;
+            console.log(allOrders);
 
             if (allOrders.length === 0) {
                 contentPanel.innerHTML = `
