@@ -16,8 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const backLinks = document.querySelectorAll(".modal-back-link");
 
-  let seller_url = "http://127.0.0.1:5000";
-  let buyer_url = "http://127.0.0.1:5000";
+  let base_url = "https://ksheeram.onrender.com"
 
   // Helpers to show/hide messages
   const showFormError = (form, message) => {
@@ -98,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      const res = await fetch(`${buyer_url}/register/buyer`, {
+      const res = await fetch(`${base_url}/register/buyer`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
