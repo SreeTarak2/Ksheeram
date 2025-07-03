@@ -348,7 +348,9 @@ document.addEventListener("DOMContentLoaded", () => {
       {
         attribution:
           "Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
-        maxZoom: 19,
+        maxZoom: 12,
+        detectRetina:true,
+        tms:true,
       }
     );
 
@@ -361,7 +363,7 @@ document.addEventListener("DOMContentLoaded", () => {
           minZoom:4,
         }
       ),
-      Satellite: Stadia_AlidadeSatellite,
+      // Satellite: Stadia_AlidadeSatellite,
       OpenAIP: OpenAIP,
       Esri:Esri_WorldImagery,
     };
