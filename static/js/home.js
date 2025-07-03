@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
       elements.currentLocationText.textContent = address;
     }
 
-    updateMapView([lat, lon], 13);// i have change from 13 to 1
+    updateMapView([lat, lon], 13); // i have change from 13 to 1
     showLocationModal(false);
 
     const saved = await saveUserLocation(lat, lon, address);
@@ -343,19 +343,31 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     );
 
+    var Esri_WorldImagery = L.tileLayer(
+      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      {
+        attribution:
+          "Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
+        maxZoom: 19,
+      }
+    );
+
     var baseMaps = {
       OpenStreetMap: L.tileLayer(
         "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         {
           attribution: "© OpenStreetMap contributors",
+          maxZoom:12,
+          minZoom:4,
         }
       ),
       Satellite: Stadia_AlidadeSatellite,
       OpenAIP: OpenAIP,
+      Esri:Esri_WorldImagery,
     };
 
     state.map = L.map("map").setView([20.5937, 78.9629], 5);
-    baseMaps["Satellite"].addTo(state.map);
+    baseMaps["OpenStreetMap"].addTo(state.map);
     L.control.layers(baseMaps).addTo(state.map);
   };
 
