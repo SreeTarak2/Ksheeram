@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const config = {
     azureMapsKey:
       "7iiVwwqiQ7lS2RpCtcl5gg2Pg6tJy2jqeoI2JlXfxwqIivMJMEhNJQQJ99BFACYeBjFVAV7fAAAgAZMP45ne",
-    apiBaseUrl: "http://127.0.0.1:5000",
+    apiBaseUrl: "https://ksheeram.onrender.com",
   };
 
   const elements = {

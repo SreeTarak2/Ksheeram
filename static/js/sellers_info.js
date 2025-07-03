@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let cartItems = [];
   const plansContainer = document.getElementById("plans");
   const productContainer = document.getElementById("products");
+  let baseurl = "https://ksheeram.onrender.com"
 
   const apiCall = async (url, options = {}) => {
     try {
@@ -25,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const fetchCartState = async () => {
     try {
-      const cart = await apiCall("/cart/get");
+      const cart = await apiCall(`${baseurl}/cart/get`);
       cartItems = cart.items || [];
       updateButtonStates();
       const cartCountEvent = new CustomEvent("cartCountUpdated", {
@@ -38,21 +39,21 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const addPlanToCartAPI = (planData) => {
-    return apiCall("/cart/add-plan", {
+    return apiCall(`${baseurl}/cart/add-plan`, {
       method: "POST",
       body: JSON.stringify(planData),
     });
   };
 
   const addProductToCartAPI = (productData) => {
-    return apiCall("/cart/add", {
+    return apiCall(`${baseurl}/cart/add`, {
       method: "POST",
       body: JSON.stringify(productData),
     });
   };
 
   const removeCartItemAPI = (productKey) => {
-    return apiCall("/cart/remove", {
+    return apiCall(`${baseurl}/cart/remove`, {
       method: "POST",
       body: JSON.stringify({ product_key: productKey }),
     });

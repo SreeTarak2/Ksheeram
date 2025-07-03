@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   let cart = [];
+  const baseurl = "https://ksheeram.onrender.com"
 
   // --- API and Cart Management (No Changes Here) ---
   const apiCall = async (url, options = {}) => {
@@ -22,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const loadCart = async () => {
     try {
-      const response = await apiCall(`/cart/get`);
+      const response = await apiCall(`${baseurl}/cart/get`);
       cart = response.items || [];
       renderCartItems();
       updateCartCount(response.count);
@@ -35,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const updateCartItemQuantity = async (productKey, quantity) => {
     try {
-      await apiCall(`/cart/update`, {
+      await apiCall(`${baseurl}/cart/update`, {
         method: "POST",
         body: JSON.stringify({ product_key: productKey, quantity: quantity }),
       });
@@ -48,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const removeCartItem = async (productKey) => {
     try {
-      await apiCall(`/cart/remove`, {
+      await apiCall(`${baseurl}/cart/remove`, {
         method: "POST",
         body: JSON.stringify({ product_key: productKey }),
       });

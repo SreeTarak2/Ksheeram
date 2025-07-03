@@ -952,7 +952,7 @@ def create_order():
 
         # --- IMPORTANT: Recalculate total on the server to prevent manipulation ---
         subtotal = sum(item["price"] * item["quantity"] for item in cart["items"])
-        delivery_fee = 20.00  # Your standard delivery fee
+        delivery_fee = 20.00 
         total_amount = subtotal + delivery_fee
 
         # Create the new order document

@@ -1,12 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
   const logoutButton = document.getElementById("logout-btn");
-
+  let baseurl = "https://ksheeram.onrender.com"
   if (logoutButton) {
     logoutButton.addEventListener("click", async (event) => {
       event.preventDefault();
 
       try {
-        const response = await fetch("/logout", {
+        const response = await fetch(`${baseurl}/logout`, {
           method: "POST",
         });
 

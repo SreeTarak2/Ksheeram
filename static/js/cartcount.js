@@ -1,3 +1,4 @@
+let baseurl ="https://ksheeram.onrender.com"
 const updateCartCountUI = (totalQuantity = 0) => {
   const cartCountElement = document.getElementById("cart-count");
   if (!cartCountElement) return;
@@ -13,7 +14,7 @@ const updateCartCountUI = (totalQuantity = 0) => {
 
 const loadInitialCartCount = async () => {
   try {
-    const response = await fetch("/cart/get");
+    const response = await fetch(`${baseurl}/cart/get`);
     if (!response.ok) throw new Error("Failed to fetch");
     const cart = await response.json();
     updateCartCountUI(cart.count || 0);

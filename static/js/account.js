@@ -2,7 +2,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- Tab Switching Logic ---
   const navLinks = document.querySelectorAll(".account-nav-link");
   const contentPanels = document.querySelectorAll(".account-panel");
-  url = "http://127.0.0.1:5000"
+  // url = "http://127.0.0.1:5000"
+  const url = "https://ksheeram.onrender.com"
 
   navLinks.forEach((link) => {
     link.addEventListener("click", (e) => {

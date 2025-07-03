@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   let cart = [];
-  const url = "http://127.0.0.1:5000";
+  const url = "https://ksheeram.onrender.com";
 
   // API helper function
   const apiCall = async (url, options = {}) => {
