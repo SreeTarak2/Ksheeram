@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ seller.name }} - Ksheeram</title>
+    <link rel="stylesheet" href="../static/css/style.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sellers.css') }}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
@@ -17,6 +18,9 @@
                     <img src="{{ url_for('static', filename='images/iconLogo.png') }}" alt="Ksheeram Logo">
                     <h2 class="logo_title">Ksheer<span>am</span></h2>
                 </a>
+                <button class="hamburger" id="hamburger" aria-label="Toggle Navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
                 <nav class="main-nav">
                     <a href="/home" class="nav-link">Home</a>
                     <a href="/sellers" class="nav-link">Sellers</a>
@@ -104,7 +108,8 @@
                                     </ul>
                                     <p class="plan-description">{{ plan.description }}</p>
                                     <button class="subscribe-btn" type="button" data-plan-name="{{ plan.name }}"
-                                        data-plan-price="{{ plan.price }}" data-seller-id="{{seller._id}}">Choose Plan</button>
+                                        data-plan-price="{{ plan.price }}" data-seller-id="{{seller._id}}">Choose
+                                        Plan</button>
                                 </div>
                                 {% endfor %}
                             </div>
@@ -143,11 +148,11 @@
             </div>
         </main>
         <footer id="footer" class="main-footer">
-            <!-- Footer content is the same as other pages, omitted for brevity -->
             <div class="container">
                 <div class="footer-grid">
                     <div class="footer-col">
                         <a href="/" class="logo">
+                            <img src="../static/images/iconLogo.png" alt="Ksheeram Logo">
                             <h2 class="logo_title">Ksheer<span>am</span></h2>
                         </a>
                         <p>Bringing fresh, pure milk from our farmers to your doorstep every morning.</p>
@@ -155,9 +160,11 @@
                     <div class="footer-col">
                         <h4>Quick Links</h4>
                         <ul>
-                            <li><a href="home.html">Home</a></li>
-                            <li><a href="sellers.html">Sellers</a></li>
-                            <li><a href="products.html">Products</a></li>
+                            <li><a href="/home" class="nav-link">Home</a></li>
+                            <li><a href="/sellers" class="nav-link">Sellers</a></li>
+                            <li><a href="/products" class="nav-link">Products</a></li>
+                            <li><a href="/myorders" class="nav-link">My Orders</a></li>
+                            <li><a href="/myaccount" class="nav-link">My Account</a></li>
                             <li><a href="#">Privacy Policy</a></li>
                         </ul>
                     </div>

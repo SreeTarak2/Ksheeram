@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,11 +9,11 @@
     <!-- Your existing font and FontAwesome links are fine -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
-
+    <link rel="stylesheet" href="../static//css/style.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
 
 </head>
+
 <body data-theme="dark-theme">
     <header class="main-header">
         <div class="container header-content">
@@ -20,6 +21,9 @@
                 <img src="../static/images/iconLogo.png" alt="Ksheeram Logo">
                 <h2 class="logo_title">Ksheer<span>am</span></h2>
             </a>
+            <button class="hamburger" id="hamburger" aria-label="Toggle Navigation">
+                <i class="fas fa-bars"></i>
+            </button>
             <nav class="main-nav">
                 <a href="/home" class="nav-link">Home</a>
                 <a href="/sellers" class="nav-link">Sellers</a>
@@ -42,14 +46,13 @@
     </header>
 
     <main class="main-content">
-        <div class="container">
+        <div class="container myaccount">
             <div class="page-header">
                 <h1><i class="fas fa-user-cog"></i> Account Settings</h1>
                 <p>Manage your profile, addresses, and other settings.</p>
             </div>
 
             <div class="account-layout">
-                <!-- Navigation links now have a 'data-tab' attribute -->
                 <nav class="account-nav">
                     <a href="#profile" class="account-nav-link active" data-tab="profile-panel">
                         <i class="fas fa-user-edit"></i>
@@ -65,17 +68,15 @@
                     </a>
                 </nav>
 
-                <!-- This container holds all the different content panels -->
                 <div class="account-content">
-                    
-                    <!-- Profile Details Panel (Visible by default) -->
                     <div id="profile-panel" class="account-panel active">
                         <h3>Edit Profile</h3>
                         <form id="profile-form">
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label for="fullName">Full Name</label>
-                                    <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name">
+                                    <input type="text" id="fullName" name="fullName" required
+                                        placeholder="Enter your full name">
                                 </div>
                                 <div class="form-group">
                                     <label for="email">Email Address</label>
@@ -83,7 +84,8 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="phone">Phone Number</label>
-                                    <input type="tel" id="phone" name="phone" required placeholder="Enter your phone number">
+                                    <input type="tel" id="phone" name="phone" required
+                                        placeholder="Enter your phone number">
                                 </div>
                             </div>
                             <div class="form-actions">
@@ -92,7 +94,6 @@
                         </form>
                     </div>
 
-                    <!-- Saved Addresses Panel (Hidden by default) -->
                     <div id="addresses-panel" class="account-panel">
                         <h3>Saved Addresses</h3>
                         <div id="address-list">
@@ -103,7 +104,6 @@
                         </button>
                     </div>
 
-                    <!-- Change Password Panel (Hidden by default) -->
                     <div id="password-panel" class="account-panel">
                         <h3>Change Password</h3>
                         <form id="password-form">
@@ -126,11 +126,12 @@
         </div>
     </main>
 
-<footer id="footer" class="main-footer">
+    <footer id="footer" class="main-footer">
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-col">
                     <a href="/" class="logo">
+                        <img src="../static/images/iconLogo.png" alt="Ksheeram Logo">
                         <h2 class="logo_title">Ksheer<span>am</span></h2>
                     </a>
                     <p>Bringing fresh, pure milk from our farmers to your doorstep every morning.</p>
@@ -163,6 +164,7 @@
     <script src="{{ url_for('static', filename='js/account.js') }}"></script>
     <script src="{{ url_for('static', filename='js/cartcount.js') }}"></script>
     <script src="{{ url_for('static', filename='js/logout.js') }}"></script>
-    
+
 </body>
+
 </html>

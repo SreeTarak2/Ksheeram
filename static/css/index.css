@@ -121,9 +121,11 @@ a:hover {
 /* ======================= FLOATING HEADER ======================= */
 .header-container {
   position: sticky;
-  top: 20px;
+  top: 0;
   z-index: 1000;
   transition: top 0.3s ease;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 .main-header {
   max-width: 1200px;
@@ -724,7 +726,7 @@ input:checked + .slider:before {
 }
 .modal-container {
   background: var(--bg-secondary);
-  padding: 2.5rem;
+  padding: 0.5rem 2rem;
   border-radius: 12px;
   border: 1px solid var(--border-color);
   box-shadow: var(--shadow-xl);

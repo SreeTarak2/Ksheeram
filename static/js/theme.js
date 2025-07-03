@@ -34,4 +34,8 @@ document.addEventListener("DOMContentLoaded", () => {
       link.classList.add("active");
     }
   });
+
+  document.getElementById("hamburger").addEventListener("click", function () {
+    document.querySelector(".main-nav").classList.toggle("show");
+  });
 });

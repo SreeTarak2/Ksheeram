@@ -17,8 +17,6 @@
 </head>
 
 <body class="dark-theme">
-
-    <!-- ======================= FLOATING HEADER ======================= -->
     <div class="header-container">
         <header class="main-header">
             <div class="container">
@@ -26,17 +24,12 @@
                     <img src="../static/images/iconLogo.png" alt="Ksheeram Logo">
                     <h2 class="logo_title">Ksheer<span>am</span></h2>
                 </a>
-                <!-- menu bar -->
-                <div class="hamburger" id="hamburger-icon">
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                </div>
-
+                <button class="hamburger" id="hamburger" aria-label="Toggle Navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
                 <nav class="main-nav">
                     <ul>
                         <li><a href="#hero">Home</a></li>
-                        <li><a href="#how">Process</a></li>
                         <li><a href="#partners">Sellers</a></li>
                         <li><a href="#products">Products</a></li>
                     </ul>
@@ -54,13 +47,11 @@
     </div>
 
     <main>
-        <!-- ======================= HERO SECTION (VIDEO BACKGROUND) ======================= -->
         <section id="hero" class="hero-section">
             <div class="hero-video-wrapper">
-                <video playsinline autoplay muted loop
-                    class="hero-video" aria-label="A background video of a cow in a green meadow.">
-                    <source src="../static/images/mainvideo.mp4"
-                        type="video/mp4">
+                <video playsinline autoplay muted loop class="hero-video"
+                    aria-label="A background video of a cow in a green meadow.">
+                    <source src="../static/images/mainvideo.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
             </div>
@@ -82,7 +73,6 @@
             </div>
         </section>
 
-        <!-- ======================= HOW IT WORKS (VISUAL JOURNEY) ======================= -->
         <section id="how" class="section section-how">
             <div class="container">
                 <div class="section-header">
@@ -121,7 +111,6 @@
             </div>
         </section>
 
-        <!-- ======================= SELLERS SECTION (AURORA UI) ======================= -->
         <section id="partners" class="section section-partners">
             <div class="aurora-background"></div>
             <div class="container">
@@ -172,7 +161,6 @@
             </div>
         </section>
 
-        <!-- ======================= FARMSTEAD PRODUCTS SECTION (CORRECTED) ======================= -->
         <section id="products" class="section section-products">
             <div class="container">
                 <div class="section-header">
@@ -218,12 +206,12 @@
         </section>
     </main>
 
-    <!-- ======================= FOOTER (RESTORED) ======================= -->
     <footer id="footer" class="main-footer">
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-col">
                     <a href="/" class="logo">
+                        <img src="../static/images/iconLogo.png" alt="Ksheeram Logo">
                         <h2 class="logo_title">Ksheer<span>am</span></h2>
                     </a>
                     <p>Bringing fresh, pure milk from our farmers to your doorstep every morning.</p>
@@ -251,10 +239,8 @@
         </div>
     </footer>
 
-    <!-- ======================= SCROLL-TO-TOP BUTTON (RESTORED) ======================= -->
     <a href="#hero" class="scroll-top-btn" aria-label="Scroll to top"><i class="fas fa-arrow-up"></i></a>
 
-    <!-- ======================= LOGIN MODAL (RESTORED) ======================= -->
     <div id="login-modal" class="modal-overlay">
         <div class="modal-container">
             <button class="modal-close-btn" aria-label="Close modal">×</button>
@@ -294,7 +280,6 @@
         </div>
     </div>
 
-    <!-- ======================= REGISTER MODAL (RESTORED) ======================= -->
     <div id="register-modal" class="modal-overlay">
         <div class="modal-container">
             <button class="modal-close-btn" aria-label="Close modal">×</button>
@@ -373,6 +358,34 @@
     <script src="../static/js/index.js"></script>
     <script src="../static/js/login.js"></script>
     <script src="../static/js/signup.js"></script>
+    <!-- <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const rootElement = document.documentElement;
+            const themeToggleCheckbox = document.getElementById("theme-toggle-checkbox");
+
+            const savedTheme = localStorage.getItem("theme") || "dark";
+            rootElement.setAttribute("data-theme", savedTheme);
+
+            if (!themeToggleCheckbox) return;
+
+            const applyTheme = (theme) => {
+                rootElement.setAttribute("data-theme", theme);
+                themeToggleCheckbox.checked = theme === "dark";
+            };
+
+            const handleThemeChange = () => {
+                const isDark = themeToggleCheckbox.checked;
+                const newTheme = isDark ? "dark" : "light";
+                applyTheme(newTheme);
+                localStorage.setItem("theme", newTheme);
+            };
+
+            themeToggleCheckbox.addEventListener("change", handleThemeChange);
+
+            applyTheme(savedTheme);
+        });
+
+    </script> -->
 </body>
 
 </html>

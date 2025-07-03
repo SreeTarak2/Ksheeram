@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- CORRECTED: Title is now user-centric -->
     <title>My Order History - Ksheeram</title>
-
+    
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -21,10 +21,12 @@
     <header class="main-header">
         <div class="container header-content">
             <a href="/home" class="logo" aria-label="Ksheeram Home">
-                <!-- CORRECTED: Using url_for for robust linking -->
                 <img src="{{ url_for('static', filename='images/iconLogo.png') }}" alt="Ksheeram Logo">
                 <h2 class="logo_title">Ksheer<span>am</span></h2>
             </a>
+            <button class="hamburger" id="hamburger" aria-label="Toggle Navigation">
+                <i class="fas fa-bars"></i>
+            </button>
             <nav class="main-nav">
                 <a href="/home" class="nav-link">Home</a>
                 <a href="/sellers" class="nav-link">Sellers</a>
@@ -46,24 +48,24 @@
         </div>
     </header>
 
-    <main class="main-content container">
-        <!-- CORRECTED: Header text is now user-centric -->
-        <div class="page-header">
-            <h1>My Order History</h1>
-            <p>Review the status and details of all your past orders.</p>
-        </div>
+        <main class="main-content container">
+            <!-- CORRECTED: Header text is now user-centric -->
+            <div class="page-header">
+                <h1>My Order History</h1>
+                <p>Review the status and details of all your past orders.</p>
+            </div>
 
-        <section class="content-panel">
-            <div class="panel-header">
-                <div class="filter-group">
-                    <label for="status-filter">Filter by status:</label>
-                    <select id="status-filter">
-                        <option value="all">All</option>
-                        <option value="pending">Pending</option>
-                        <option value="payment-failed">Payment Failed</option>
-                        <option value="completed">Completed</option>
-                        <option value="cancelled">Cancelled</option>
-                    </select>
+            <section class="content-panel">
+                <div class="panel-header">
+                    <div class="filter-group">
+                        <label for="status-filter">Filter by status:</label>
+                        <select id="status-filter">
+                            <option value="all">All</option>
+                            <option value="pending">Pending</option>
+                            <option value="payment-failed">Payment Failed</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
                 </div>
             </div>
 
@@ -95,6 +97,7 @@
             <div class="footer-grid">
                 <div class="footer-col">
                     <a href="/" class="logo">
+                        <img src="../static/images/iconLogo.png" alt="Ksheeram Logo">
                         <h2 class="logo_title">Ksheer<span>am</span></h2>
                     </a>
                     <p>Bringing fresh, pure milk from our farmers to your doorstep every morning.</p>

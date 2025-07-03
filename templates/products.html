@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="../static/css/style.css" />
 </head>
+
 <body data-theme="dark-theme">
 
     <header class="main-header">
@@ -15,6 +17,9 @@
                 <img src="../static/images/iconLogo.png" alt="Ksheeram Logo">
                 <h2 class="logo_title">Ksheer<span>am</span></h2>
             </a>
+            <button class="hamburger" id="hamburger" aria-label="Toggle Navigation">
+                <i class="fas fa-bars"></i>
+            </button>
             <nav class="main-nav">
                 <a href="/home" class="nav-link">Home</a>
                 <a href="/sellers" class="nav-link">Sellers</a>
@@ -42,14 +47,15 @@
                 <h1><i class="fas fa-shopping-basket"></i> Browse Products</h1>
                 <p>Discover fresh milk, ghee, paneer, and more from our network of trusted sellers.</p>
             </div>
-            
+
             <!-- Product Section -->
             <div class="product-section">
                 <h3 class="section-subtitle">Products Near You</h3>
                 <div class="card-grid product-grid" id="nearby-product-grid">
                     {% if nearby_products %}
                     {% for product in nearby_products %}
-                    <div class="product-card" data-category="{{ product.category }}" data-price="{{ product.price }}" data-rating="{{ product.ratings }}">
+                    <div class="product-card" data-category="{{ product.category }}" data-price="{{ product.price }}"
+                        data-rating="{{ product.ratings }}">
                         <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-image">
                         <div class="product-content">
                             <h4>{{ product.name }}</h4>
@@ -57,30 +63,30 @@
                             <p class="product-rating"><i class="fas fa-star"></i> {{ product.ratings }} / 5</p>
                             <div class="product-footer">
                                 <span class="product-price">₹{{ product.price }} / {{ product.unit }}</span>
-                                <button class="btn btn-primary add-to-cart-btn" 
-                                        data-seller-id="{{ product.seller_id }}"
-                                        data-product-name="{{ product.name }}"
-                                        data-product-price="{{ product.price }}"
-                                        data-product-seller="{{ product.seller }}"
-                                        data-product-image="{{ product.image_url }}"
-                                        data-product-unit="{{ product.unit }}"
-                                        {% if not product.in_stock %}disabled{% endif %}>
+                                <button class="btn btn-primary add-to-cart-btn" data-seller-id="{{ product.seller_id }}"
+                                    data-product-name="{{ product.name }}" data-product-price="{{ product.price }}"
+                                    data-product-seller="{{ product.seller }}"
+                                    data-product-image="{{ product.image_url }}" data-product-unit="{{ product.unit }}"
+                                    {% if not product.in_stock %}disabled{% endif %}>
                                     <i class="fas fa-shopping-cart"></i> Add to Cart
                                 </button>
                             </div>
                         </div>
                         <div class="stock-status">
-                            {% if product.in_stock %}<span class="in-stock">In Stock</span>{% else %}<span class="out-of-stock">Out of Stock</span>{% endif %}
+                            {% if product.in_stock %}<span class="in-stock">In Stock</span>{% else %}<span
+                                class="out-of-stock">Out of Stock</span>{% endif %}
                         </div>
                     </div>
                     {% endfor %}
                     {% else %}
-                    <p class="no-products-message">No products found within a 10km radius. Check out other products below!</p>
+                    <p class="no-products-message">No products found within a 10km radius. Check out other products
+                        below!</p>
                     {% endif %}
                 </div>
             </div>
 
-            <div class="view-all-container" id="view-all-container" {% if not other_products %}style="display:none;" {% endif %}>
+            <div class="view-all-container" id="view-all-container" {% if not other_products %}style="display:none;" {%
+                endif %}>
                 <hr>
                 <button class="btn btn-secondary" id="view-all-btn">View All Products</button>
             </div>
@@ -97,13 +103,15 @@
                             <p class="product-rating"><i class="fas fa-star"></i> {{ product.ratings }} / 5</p>
                             <div class="product-footer">
                                 <span class="product-price">₹{{ product.price }} / {{ product.unit }}</span>
-                                <button class="add-to-cart-btn" data-name="{{ product.name }}" data-seller-id="{{ product.seller._id }}">
+                                <button class="add-to-cart-btn" data-name="{{ product.name }}"
+                                    data-seller-id="{{ product.seller._id }}">
                                     <i class="fas fa-shopping-cart"></i> Add to Cart
                                 </button>
                             </div>
                         </div>
                         <div class="stock-status">
-                            {% if product.in_stock %}<span class="in-stock">In Stock</span>{% else %}<span class="out-of-stock">Out of Stock</span>{% endif %}
+                            {% if product.in_stock %}<span class="in-stock">In Stock</span>{% else %}<span
+                                class="out-of-stock">Out of Stock</span>{% endif %}
                         </div>
                     </div>
                     {% endfor %}
@@ -149,4 +157,5 @@
     <script src="../static/js/logout.js"></script>
     <script src="../static/js/sortProducts.js"></script>
 </body>
+
 </html>

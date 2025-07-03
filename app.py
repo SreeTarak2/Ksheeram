@@ -24,8 +24,6 @@ app = Flask(__name__)
 app.register_blueprint(seller_app, url_prefix="/seller")
 CORS(app, supports_credentials=True)
 
-
-# Add these JWT configurations to your Flask app
 app.config["JWT_SECRET_KEY"] = "your_jwt_secret_key"
 app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
 app.config["JWT_COOKIE_SECURE"] = False
@@ -38,7 +36,6 @@ jwt = JWTManager(app)
 # Mongo setup
 MONGO_URI = "mongodb+srv://jstvamsikrisha:vamsikrishna@cluster0.wzwriwa.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 base_url = "https://ksheeram.onrender.com"
-
 
 try:
     # client = MongoClient("mongodb://localhost:27017/")
@@ -54,12 +51,10 @@ except Exception as e:
     logging.error(f"MongoDB Error: {e}")
     raise SystemExit("DB connection failed.")
 
-
 # Routes
 @app.route("/")
 def index():
     return render_template("index.html")
-
 
 # home route
 @app.route("/home")
@@ -68,14 +63,12 @@ def home():
     user = get_jwt_identity()
     return render_template("home.html", user=user)
 
-
 # sellers route
 @app.route("/sellers")
 @jwt_required()
 def sellers():
     user = get_jwt_identity()
     return render_template("sellers.html", user=user)
-
 
 # ========================== Products ==========================
 @app.route("/products/", methods=["GET"])
@@ -84,7 +77,7 @@ def sellers():
 def products():
     # Get the email of the user from the JWT
     user_email = get_jwt_identity()
-    print(f"User email: {user_email}")  # Debugging: Check the extracted user email
+    print(f"User email: {user_email}")
 
     # Step 1: Get User's Location
     user_data = buyers_collection.find_one({"email": user_email})
@@ -155,7 +148,6 @@ def products():
         nearby_products=nearby_products,
         other_products=other_products,
     )
-
 
 # --------------------------- My Orders --------------------------------
 @app.route("/myorders", methods=["GET"])
