@@ -3,6 +3,26 @@
 {% block header %}Dashboard{% endblock %}
 
 {% block content %}
+
+<!-- Seller Profile -->
+{% if seller %}
+<div class="row mb-4">
+    <div class="col-lg-12"> <!-- Increased width to full row -->
+        <div class="card shadow h-100">
+            <div class="card-body">
+                <h5 class="text-primary mb-2"><strong>{{ seller.name }}</strong></h5>
+                <p><strong>Email:</strong> {{ seller.email }}</p>
+                <p><strong>Phone:</strong> {{ seller.phone }}</p>
+                <p><strong>Address:</strong> {{ seller.address }}</p>
+                <p><strong>Business Hours:</strong> {{ seller.business_hours }}</p>
+                <p><strong>Delivery Radius:</strong> {{ seller.delivery_radius }} km</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Dashboard Stats -->
 <div class="row">
     <!-- Total Products -->
     <div class="col-xl-3 col-md-6 mb-4">
@@ -62,7 +82,8 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total Revenue</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">₹{{ "%.2f"|format(stats.total_revenue * 2) }}</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">₹{{ "%.2f"|format(stats.total_revenue * 2)
+                            }}</div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-rupee-sign fa-2x text-gray-300"></i>
@@ -73,7 +94,7 @@
     </div>
 </div>
 
-<!-- Recent Orders -->
+<!-- Recent Orders Table -->
 <div class="row">
     <div class="col-lg-12">
         <div class="card shadow mb-4">
@@ -81,15 +102,15 @@
                 <h6 class="m-0 font-weight-bold text-primary">Recent Orders</h6>
             </div>
             <div class="card-body">
+                <!-- In dashboard.html -->
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
                                 <th>Order ID</th>
-                                <th>Customer</th>
-                                <th>Product</th>
-                                <th>Quantity</th>
-                                <th>Total</th>
+                                <th>Customer Name</th>
+                                <th>Item Count</th>
+                                <th>Total Amount</th>
                                 <th>Status</th>
                                 <th>Date</th>
                             </tr>
@@ -97,21 +118,26 @@
                         <tbody>
                             {% for order in recent_orders %}
                             <tr>
-                                <td>#{{ order.id }}</td>
-                                <td>{{ order.customer_name }}</td>
-                                <td>{{ order.product }}</td>
-                                <td>{{ order.quantity }}</td>
-                                <td>₹{{ "%.2f"|format(order.total * 2) }}</td>
+                                <!-- CORRECT: Access the keys that actually exist -->
+                                <td>{{ order.order_id }}</td>
+                                <td>{{ order.buyer_info.name }}</td>
+                                <td>{{ order.items | length }}</td>
+                                <!-- Show how many different items are in the order -->
+                                <td>₹{{ "%.2f"|format(order.total_amount) }}</td>
                                 <td>
                                     <span class="badge 
-                                        {% if order.status == 'Delivered' %}bg-success
-                                        {% elif order.status == 'Pending' %}bg-warning
-                                        {% elif order.status == 'Processing' %}bg-info
-                                        {% else %}bg-secondary{% endif %}">
+                        {% if order.status == 'Delivered' %}bg-success
+                        {% elif order.status == 'Pending' %}bg-warning
+                        {% elif order.status == 'Payment Failed' %}bg-danger
+                        {% else %}bg-secondary{% endif %}">
                                         {{ order.status }}
                                     </span>
                                 </td>
-                                <td>{{ order.date }}</td>
+                                <td>{{ order.order_date }}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center">No recent orders found.</td>
                             </tr>
                             {% endfor %}
                         </tbody>

@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request, render_template
-from pymongo import MongoClient
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
 from flask_cors import CORS
 from flask_jwt_extended import (
     JWTManager,
@@ -17,7 +18,10 @@ from bson import ObjectId
 import time
 import random
 
+from seller_dashboard import seller_app
+
 app = Flask(__name__)
+app.register_blueprint(seller_app, url_prefix='/seller')
 CORS(app, supports_credentials=True)
 
 
@@ -32,11 +36,14 @@ app.config["JWT_ACCESS_COOKIE_NAME"] = "access"
 jwt = JWTManager(app)
 
 # Mongo setup
+MONGO_URI = "mongodb+srv://jstvamsikrisha:vamsikrishna@cluster0.wzwriwa.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+
 try:
-    client = MongoClient("mongodb://localhost:27017/")
+    # client = MongoClient("mongodb://localhost:27017/")
+    client  = MongoClient(MONGO_URI,server_api=ServerApi('1'))
     db = client["ksheeram"]
     buyers_collection = db["buyers"]
-    sellers_collection = db["sellers"]
+    # sellers_info = db["sellers"]
     sellers_info = db["sellersinfo"]
     carts_collection = db["carts"]
     orders_collection = db["orders"]
@@ -51,14 +58,14 @@ except Exception as e:
 def index():
     return render_template("index.html")
 
-
+# home route
 @app.route("/home")
 @jwt_required()
 def home():
     user = get_jwt_identity()
     return render_template("home.html", user=user)
 
-
+# sellers route
 @app.route("/sellers")
 @jwt_required()
 def sellers():
@@ -441,7 +448,7 @@ def get_account_details():
 
         user_data = buyers_collection.find_one({"email": user_email})
         if not user_data:
-            user_data = sellers_collection.find_one({"email": user_email})
+            user_data = sellers_info.find_one({"email": user_email})
 
         if not user_data:
             return jsonify({"error": "User not found"}), 404
@@ -474,7 +481,7 @@ def update_account_details():
 
         user_data = buyers_collection.find_one({"email": user_email})
         if not user_data:
-            user_data = sellers_collection.find_one({"email": user_email})
+            user_data = sellers_info.find_one({"email": user_email})
 
         if not user_data:
             return jsonify({"error": "User not found"}), 404
@@ -486,7 +493,7 @@ def update_account_details():
                     {"$set": {"fullName": updated_full_name, "phone": updated_phone}},
                 )
             else:
-                sellers_collection.update_one(
+                sellers_info.update_one(
                     {"email": user_email},
                     {"$set": {"storeName": updated_full_name, "phone": updated_phone}},
                 )
@@ -549,7 +556,7 @@ def buyer_login():
             identity=email, expires_delta=timedelta(hours=1)
         )
         cookie_expires = timedelta(hours=1)
-        resp = jsonify({"message": "Login successful", "redirect": "/home"})
+        resp = jsonify({"message": "Login successful", "redirect": "http://127.0.0.1:5000/home"})
         set_access_cookies(resp, access_token, max_age=cookie_expires)
         # resp.set_cookie("access_token", access_token, httponly=True, samesite="Lax")
 
@@ -560,39 +567,38 @@ def buyer_login():
         return jsonify({"error": "Server error"}), 500
 
 
-# ---------- Seller Login ----------
-@app.route("/login/seller", methods=["POST"])
-def seller_login():
-    try:
-        data = request.get_json()
-        identifier = data.get("email") or data.get("storeid")
-        password = data.get("password")
+# # ---------- Seller Login ----------
+# @app.route("/login/seller", methods=["POST"])
+# def seller_login():
+#     try:
+#         data = request.get_json()
+#         identifier = data.get("email") or data.get("storeid")
+#         password = data.get("password")
 
-        if not identifier or not password:
-            return jsonify({"error": "ID/email and password required"}), 400
+#         if not identifier or not password:
+#             return jsonify({"error": "ID/email and password required"}), 400
 
-        seller = sellers_collection.find_one(
-            {"$or": [{"email": identifier}, {"storeid": identifier}]}
-        )
+#         seller = sellers_info.find_one(
+#             {"$or": [{"email": identifier}, {"storeid": identifier}]}
+#         )
 
-        if not seller or not bcrypt.checkpw(
-            password.encode(), seller["password"].encode()
-        ):
-            return jsonify({"error": "Invalid credentials"}), 401
+#         if not seller or not bcrypt.checkpw(
+#             password.encode(), seller["password"].encode()
+#         ):
+#             return jsonify({"error": "Invalid credentials"}), 401
 
-        access_token = create_access_token(
-            identity=identifier, expires_delta=timedelta(hours=1)
-        )
-        cookie_expiry = timedelta(hours=1)
-        resp = jsonify({"message": "Login successful", "redirect": "/home"})
-        set_access_cookies(resp, access_token, max_age=cookie_expiry)
-        # resp.set_cookie("access_token", access_token, httponly=True, samesite="Lax")
-        return resp
+#         access_token = create_access_token(
+#             identity=identifier, expires_delta=timedelta(hours=1)
+#         )
+#         cookie_expiry = timedelta(hours=1)
+#         resp = jsonify({"message": "Login successful", "redirect": "/home"})
+#         set_access_cookies(resp, access_token, max_age=cookie_expiry)
+#         # resp.set_cookie("access_token", access_token, httponly=True, samesite="Lax")
+#         return resp
 
-    except Exception as e:
-        logging.error(f"Seller login error: {e}")
-        return jsonify({"error": "Server error"}), 500
-
+#     except Exception as e:
+#         logging.error(f"Seller login error: {e}")
+#         return jsonify({"error": "Server error"}), 500
 
 # ---------- Buyer Registration ----------
 @app.route("/register/buyer", methods=["POST"])
@@ -619,9 +625,9 @@ def signup_buyer():
         }
         buyers_collection.insert_one(new_user)
 
-        access_token = create_access_token(identity=email, expires_delta=timedelta)
+        access_token = create_access_token(identity=email, expires_delta=timedelta(days=1))
         cookie_expiry = timedelta(hours=1)
-        resp = jsonify({"message": "Registration successful", "redirect": "/home"})
+        resp = jsonify({"message": "Registration successful", "redirect": "http://127.0.0.1:5000/home"})
         set_access_cookies(resp, access_token, max_age=cookie_expiry)
         return resp
 
@@ -630,43 +636,42 @@ def signup_buyer():
         return jsonify({"error": "Server error"}), 500
 
 
-# ---------- Seller Registration ----------
-@app.route("/register/seller", methods=["POST"])
-def signup_seller():
-    try:
-        data = request.get_json()
-        store_name = data.get("storeName")
-        email = data.get("email")
-        phone = data.get("phone")
-        password = data.get("password")
+# # ---------- Seller Registration ----------
+# @app.route("/register/seller", methods=["POST"])
+# def signup_seller():
+#     try:
+#         data = request.get_json()
+#         store_name = data.get("storeName")
+#         email = data.get("email")
+#         phone = data.get("phone")
+#         password = data.get("password")
 
-        if not all([store_name, email, phone, password]):
-            return jsonify({"error": "All fields required"}), 400
+#         if not all([store_name, email, phone, password]):
+#             return jsonify({"error": "All fields required"}), 400
 
-        if sellers_collection.find_one({"email": email}):
-            return jsonify({"error": "Email already in use"}), 400
+#         if sellers_info.find_one({"email": email}):
+#             return jsonify({"error": "Email already in use"}), 400
 
-        hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
-        new_seller = {
-            "storeName": store_name,
-            "email": email,
-            "phone": phone,
-            "password": hashed_password,
-        }
-        sellers_collection.insert_one(new_seller)
+#         hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+#         new_seller = {
+#             "storeName": store_name,
+#             "email": email,
+#             "phone": phone,
+#             "password": hashed_password,
+#         }
+#         sellers_info.insert_one(new_seller)
 
-        access_token = create_access_token(
-            identity=email, expires_delta=timedelta(hours=1)
-        )
-        cookie_expiry = timedelta(hours=1)
-        resp = jsonify({"message": "Registration successful", "redirect": "/home"})
-        set_access_cookies(resp, access_token, max_age=cookie_expiry)
-        return resp
+#         access_token = create_access_token(
+#             identity=email, expires_delta=timedelta(hours=1)
+#         )
+#         cookie_expiry = timedelta(hours=1)
+#         resp = jsonify({"message": "Registration successful", "redirect": "/home"})
+#         set_access_cookies(resp, access_token, max_age=cookie_expiry)
+#         return resp
 
-    except Exception as e:
-        logging.error(f"Seller registration error: {e}")
-        return jsonify({"error": "Server error"}), 500
-
+#     except Exception as e:
+#         logging.error(f"Seller registration error: {e}")
+#         return jsonify({"error": "Server error"}), 500
 
 # ---------- User Location and Nearby sellers ----------
 @app.route("/get-user-location", methods=["GET"])
@@ -677,7 +682,7 @@ def get_user_location():
 
         user_data = buyers_collection.find_one({"email": user_email})
         if not user_data:
-            user_data = sellers_collection.find_one({"email": user_email})
+            user_data = sellers_info.find_one({"email": user_email})
 
         if not user_data:
             return jsonify({"error": "User not found"}), 404
@@ -757,7 +762,11 @@ def get_sellers_nearby():
         user_lon = float(data["lon"])
 
         # Query: Check for latitude and longitude fields
-        query = {"latitude": {"$ne": False}, "longitude": {"$ne": False}}
+        query = {
+    "latitude": {"$exists": True, "$ne": None},
+    "longitude": {"$exists": True, "$ne": None}
+        }
+
         # print(f"DEBUG: MongoDB Query: {query}")
 
         # Fetch sellers from DB
@@ -825,7 +834,6 @@ def logout():
 # ------------------ Fake Payments -----------------------------
 DELIVERY_FEE = 20
 
-
 def process_fake_payment_result(order_id, user_id, was_successful):
     if was_successful:
         orders_collection.update_one(
@@ -842,7 +850,7 @@ def process_fake_payment_result(order_id, user_id, was_successful):
         )
         logging.info(f"❌ FAKE-WEBHOOK: Order {order_id} marked as failed.")
 
-
+# fake payment
 @app.route("/fake_payment/initiate", methods=["POST"])
 @jwt_required()
 def initiate_fake_payment():
@@ -853,61 +861,77 @@ def initiate_fake_payment():
             return jsonify({"error": "User not found"}), 404
 
         cart = carts_collection.find_one({"buyer_id": user["_id"], "status": "active"})
-        if not cart:
-            return jsonify({"error": "No active cart found."}), 400
-        if not cart.get("items"):
-            return jsonify({"error": "Your cart has no items."}), 400
+        if not cart or not cart.get("items"):
+            return jsonify({"error": "Your cart is empty."}), 400
 
-        total_amount = (
-            sum(item["price"] * item["quantity"] for item in cart["items"])
-            + DELIVERY_FEE
-        )
-        preliminary_order = {
-            "order_id": f"FAKE-KS{int(datetime.now(timezone.utc).timestamp())}",
+        sellers_orders = {}
+        for item in cart.get("items", []):
+            seller_id = item.get("seller_id")
+            if not seller_id:
+                continue
+            if seller_id not in sellers_orders:
+                sellers_orders[seller_id] = {"items": [], "subtotal": 0.0}
+            sellers_orders[seller_id]["items"].append(item)
+            sellers_orders[seller_id]["subtotal"] += item.get("price", 0) * item.get("quantity", 1)
+
+        if not sellers_orders:
+            return jsonify({"error": "No valid items in cart to process."}), 400
+
+        created_order_ids = []
+        user_info_for_seller = {
             "buyer_id": user["_id"],
-            "buyer_name": user.get("fullName", "Unknown"),
-            "items": cart["items"],
-            "item_count": sum(item["quantity"] for item in cart["items"]),
-            "total_amount": total_amount,
-            "status": "Awaiting Payment",
-            "order_date": datetime.now(timezone.utc),
+            "name": user.get("fullName", "N/A"),
+            "email": user.get("email"),
+            "phone": user.get("phone", "N/A"),
+            "address": user.get("last_location", {}).get("address", "Address not provided")
         }
 
-        result = orders_collection.insert_one(preliminary_order)
-        order_id = str(result.inserted_id)
+        for seller_id, order_data in sellers_orders.items():
+            total_for_this_seller = order_data['subtotal'] + DELIVERY_FEE
+            new_order = {
+                "order_id": f"KS{int(time.time())}-{random.randint(100, 999)}",
+                "seller_id": ObjectId(seller_id),
+                "buyer_info": user_info_for_seller,
+                "items": order_data["items"],
+                "total_amount": total_for_this_seller,
+                "status": "Awaiting Payment",
+                "order_date": datetime.now(timezone.utc),
+            }
+            result = orders_collection.insert_one(new_order)
+            created_order_ids.append(result.inserted_id)
 
-        logging.info(
-            f"⏳ FAKE-PAYMENT: Initiating payment for order {order_id}. Waiting 3 seconds..."
-        )
-        time.sleep(3)
-
-        payment_succeeded = random.random() < 0.8
-        process_fake_payment_result(order_id, user["_id"], payment_succeeded)
+        logging.info(f"⏳ FAKE-PAYMENT: Processing payment for {len(created_order_ids)} sub-orders.")
+        time.sleep(2)
+        payment_succeeded = random.random() < 0.9
 
         if payment_succeeded:
-            return jsonify(
-                {
-                    "message": "Payment Successful!",
-                    "success": True,
-                    "redirect": "/myorders",
-                    "order_id": order_id,
-                }
+            orders_collection.update_many(
+                {"_id": {"$in": created_order_ids}},
+                {"$set": {"status": "Pending"}}
             )
+            carts_collection.update_one(
+                {"_id": cart["_id"]}, {"$set": {"status": "completed"}}
+            )
+            logging.info(f"✅ FAKE-PAYMENT: SUCCESS for orders: {created_order_ids}")
+            return jsonify({
+                "message": "Payment Successful! Your order has been placed with each seller.",
+                "success": True,
+                "redirect": "/myorders"
+            })
         else:
-            return (
-                jsonify(
-                    {
-                        "error": "Payment Failed. Please try another payment method.",
-                        "success": False,
-                    }
-                ),
-                400,
+            orders_collection.update_many(
+                {"_id": {"$in": created_order_ids}},
+                {"$set": {"status": "Payment Failed"}}
             )
+            logging.info(f"❌ FAKE-PAYMENT: FAILED for orders: {created_order_ids}")
+            return jsonify({
+                "error": "Payment Failed. Please try again.",
+                "success": False,
+            }), 400
 
     except Exception as e:
-        logging.error(f"Error in fake payment: {e}", exc_info=True)
+        logging.error(f"Error in fake payment initiation: {e}", exc_info=True)
         return jsonify({"error": "An internal server error occurred."}), 500
-
 
 # -------------------------- ORDER MANAGEMENT --------------------------------
 @app.route("/order/create", methods=["POST"])
@@ -962,7 +986,7 @@ def create_order():
         logging.error(f"Error creating order: {e}", exc_info=True)
         return jsonify({"error": "Server error while creating order"}), 500
 
-
+# helper function
 def convert_mongo_types(obj):
     if isinstance(obj, list):
         return [convert_mongo_types(item) for item in obj]
@@ -975,7 +999,7 @@ def convert_mongo_types(obj):
     else:
         return obj
 
-
+# order get
 @app.route("/orders/get", methods=["GET"])
 @jwt_required()
 def get_my_orders():
@@ -988,10 +1012,9 @@ def get_my_orders():
         orders_cursor = orders_collection.find({"buyer_id": user["_id"]}).sort(
             "order_date", -1
         )
-
         orders_list = []
         for order in orders_cursor:
-            order = convert_mongo_types(order)  # ✅ Recursively convert for JSON
+            order = convert_mongo_types(order)
             orders_list.append(order)
 
         return jsonify(orders=orders_list), 200
@@ -999,7 +1022,6 @@ def get_my_orders():
     except Exception as e:
         logging.error(f"Error fetching orders: {e}", exc_info=True)
         return jsonify({"error": "Server error while fetching orders"}), 500
-
 
 if __name__ == "__main__":
     app.run(debug=True)

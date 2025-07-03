@@ -8,11 +8,13 @@ load_dotenv()
 
 AZURE_SUBSCRIPTION_KEY = os.getenv("AZURE_SUBSCRIPTION_KEY")
 
-client = MongoClient("mongodb://localhost:27017/")
+MONGO_URI = "mongodb+srv://jstvamsikrisha:vamsikrishna@cluster0.wzwriwa.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+
+client = MongoClient(MONGO_URI)
 db = client["ksheeram"]
 collection = db["sellersinfo"]
 
-# Sample seller data (abbreviated for brevity)
+
 dairy_data =[
   {
     "name": "Amul Dairy Delights",

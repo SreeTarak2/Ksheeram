@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const statusFilter = document.getElementById('status-filter');
     let allOrders = [];
 
+    let url = 'http://127.0.0.1:5000'
     const renderOrders = (orders) => {
         ordersTableBody.innerHTML = '';
 
@@ -58,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             ordersTableBody.innerHTML = `<tr><td colspan="6" class="loading-cell">Loading your orders...</td></tr>`;
 
-            const response = await fetch('http://127.0.0.1:5000/orders/get');
+            const response = await fetch(`${url}/orders/get`);
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.error || 'Could not fetch your orders.');

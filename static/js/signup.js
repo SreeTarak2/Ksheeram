@@ -1,8 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
   // Elements
   const roleSelection = document.getElementById("register-role-selection");
-  const buyerFormContainer = document.getElementById("buyer-register-form-container");
-  const sellerFormContainer = document.getElementById("seller-register-form-container");
+  const buyerFormContainer = document.getElementById(
+    "buyer-register-form-container"
+  );
+  const sellerFormContainer = document.getElementById(
+    "seller-register-form-container"
+  );
 
   const buyerRegisterBtn = document.getElementById("buyer-register-btn");
   const sellerRegisterBtn = document.getElementById("seller-register-btn");
@@ -11,6 +15,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const sellerRegisterForm = document.getElementById("seller-register-form");
 
   const backLinks = document.querySelectorAll(".modal-back-link");
+
+  let seller_url = "http://127.0.0.1:5000";
+  let buyer_url = "http://127.0.0.1:5000";
 
   // Helpers to show/hide messages
   const showFormError = (form, message) => {
@@ -74,7 +81,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const email = document.getElementById("reg-buyer-email").value;
     const phone = document.getElementById("reg-buyer-phone").value;
     const password = document.getElementById("reg-buyer-password").value;
-    const confirmPassword = document.getElementById("reg-buyer-confirm-password").value;
+    const confirmPassword = document.getElementById(
+      "reg-buyer-confirm-password"
+    ).value;
 
     clearMessages(buyerRegisterForm);
 
@@ -89,12 +98,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      const res = await fetch("http://127.0.0.1:5000/register/buyer", {
+      const res = await fetch(`${buyer_url}/register/buyer`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        credentials:"include",
+        credentials: "include",
         body: JSON.stringify({ fullName, email, phone, password }),
       });
 
@@ -103,16 +112,19 @@ document.addEventListener("DOMContentLoaded", () => {
       if (res.ok) {
         showSuccessMessage(buyerRegisterForm, data.message);
         if (data.redirect) {
-          setTimeout(()=>{
+          setTimeout(() => {
             window.location.href = data.redirect;
-          } , 300);
+          }, 300);
         }
       } else {
         showFormError(buyerRegisterForm, data.error || "Registration failed.");
       }
     } catch (error) {
       console.error("Error:", error);
-      showFormError(buyerRegisterForm, "An error occurred during registration.");
+      showFormError(
+        buyerRegisterForm,
+        "An error occurred during registration."
+      );
     }
   });
 
@@ -124,7 +136,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const email = document.getElementById("reg-seller-email").value;
     const phone = document.getElementById("reg-seller-phone").value;
     const password = document.getElementById("reg-seller-password").value;
-    const confirmPassword = document.getElementById("reg-seller-confirm-password").value;
+    const confirmPassword = document.getElementById(
+      "reg-seller-confirm-password"
+    ).value;
 
     clearMessages(sellerRegisterForm);
 
@@ -139,12 +153,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      const res = await fetch("http://127.0.0.1:5000/register/seller", {
+      const res = await fetch(`/seller/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        credentials:"include",
+        credentials: "include",
         body: JSON.stringify({ storeName, email, phone, password }),
       });
 
@@ -153,16 +167,19 @@ document.addEventListener("DOMContentLoaded", () => {
       if (res.ok) {
         showSuccessMessage(sellerRegisterForm, data.message);
         if (data.redirect) {
-          setTimeout(()=>{
+          setTimeout(() => {
             window.location.href = data.redirect;
-          },300);
+          }, 300);
         }
       } else {
         showFormError(sellerRegisterForm, data.error || "Registration failed.");
       }
     } catch (error) {
       console.error("Error:", error);
-      showFormError(sellerRegisterForm, "An error occurred during registration.");
+      showFormError(
+        sellerRegisterForm,
+        "An error occurred during registration."
+      );
     }
   });
 });

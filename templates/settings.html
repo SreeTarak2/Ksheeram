@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - Seller Dashboard{% endblock %}
+
+{% block header %}Account & Business Settings{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Seller Information Form -->
+    <div class="col-lg-8">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Your Business Information</h6>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('seller_app.update_seller') }}">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="businessName" class="form-label">Business Name</label>
+                            <input type="text" class="form-control" id="businessName" name="name" value="{{ seller.name | default('', true) }}" required>
+                        </div>
+                        
+                        <!-- (SECURITY FIX) Email is read-only. It's the login identifier. -->
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label">Email Address (Login ID)</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ seller.email | default('', true) }}" readonly disabled>
+                            <div class="form-text">Your email cannot be changed.</div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- (UX IMPROVEMENT) Use type="tel" for better mobile keyboard -->
+                        <div class="col-md-6 mb-3">
+                            <label for="phone" class="form-label">Contact Phone Number</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" value="{{ seller.phone | default('', true) }}" required>
+                        </div>
+
+                        <!-- (UX IMPROVEMENT) Use type="number" and add a placeholder -->
+                        <div class="col-md-6 mb-3">
+                            <label for="deliveryRadius" class="form-label">Delivery Radius (in km)</label>
+                            <input type="number" class="form-control" id="deliveryRadius" name="delivery_radius" value="{{ seller.delivery_radius | default('', true) }}" placeholder="e.g., 5" min="1" step="1" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Business Address</label>
+                        <textarea class="form-control" id="address" name="address" rows="3" placeholder="Enter your full business address for customer visibility." required>{{ seller.address | default('', true) }}</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="businessHours" class="form-label">Business Hours</label>
+                        <input type="text" class="form-control" id="businessHours" name="business_hours" value="{{ seller.business_hours | default('', true) }}" placeholder="e.g., 9:00 AM - 6:00 PM, Mon - Sat" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i> Save Changes
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Optional: A side column for help text or other settings -->
+    <div class="col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Profile Completeness</h5>
+                <p class="card-text">Make sure your business name, address, and hours are up-to-date. This information is visible to your customers.</p>
+                {% if seller.profile_complete %}
+                    <div class="alert alert-success" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>Your profile is complete!
+                    </div>
+                {% else %}
+                    <div class="alert alert-warning" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Your profile is incomplete. Please fill out all fields.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

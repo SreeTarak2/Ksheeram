@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}KSHEERAM Dashboard{% endblock %}</title>
+    <title>{% block title %}Seller Dashboard{% endblock %} - Ksheeram</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/sellers_home.css') }}" rel="stylesheet">
 </head>
 <body>
     <div class="container-fluid">
@@ -16,34 +16,30 @@
                 <div class="position-sticky pt-3">
                     <div class="text-center mb-4">
                         <h4 class="text-primary">
-                            <i class="fas fa-milk-alt"></i> KSHEERAM
+                            <i class="fas fa-store"></i> Ksheeram
                         </h4>
                         <small class="text-muted">Seller Dashboard</small>
                     </div>
                     
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}" 
-                               href="{{ url_for('dashboard') }}">
-                                <i class="fas fa-tachometer-alt"></i> Dashboard
+                            <a class="nav-link {% if request.endpoint == 'seller_app.dashboard' %}active{% endif %}" href="{{ url_for('seller_app.dashboard') }}">
+                                <i class="fas fa-tachometer-alt fa-fw me-2"></i> Dashboard
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {% if request.endpoint == 'orders' %}active{% endif %}" 
-                               href="{{ url_for('orders') }}">
-                                <i class="fas fa-shopping-cart"></i> Orders
+                            <a class="nav-link {% if request.endpoint == 'seller_app.orders' %}active{% endif %}" href="{{ url_for('seller_app.orders') }}">
+                                <i class="fas fa-shopping-cart fa-fw me-2"></i> Orders
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {% if request.endpoint == 'products' %}active{% endif %}" 
-                               href="{{ url_for('products') }}">
-                                <i class="fas fa-box"></i> Products
+                            <a class="nav-link {% if request.endpoint == 'seller_app.products' %}active{% endif %}" href="{{ url_for('seller_app.products') }}">
+                                <i class="fas fa-box fa-fw me-2"></i> Products
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {% if request.endpoint == 'settings' %}active{% endif %}" 
-                               href="{{ url_for('settings') }}">
-                                <i class="fas fa-cog"></i> Settings
+                            <a class="nav-link {% if request.endpoint == 'seller_app.settings' %}active{% endif %}" href="{{ url_for('seller_app.settings') }}">
+                                <i class="fas fa-cog fa-fw me-2"></i> Settings
                             </a>
                         </li>
                     </ul>
@@ -53,23 +49,81 @@
             <!-- Main content -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">{% block header %}Dashboard{% endblock %}</h1>
+                    <h1 class="h2">{% block header %}{% endblock %}</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
-                        <div class="btn-group me-2">
-                            <button type="button" class="btn btn-sm btn-outline-secondary">
-                                <i class="fas fa-user"></i> Profile
-                            </button>
+                        <!-- Profile Dropdown (NOW DYNAMIC) -->
+                        <div class="btn-group">
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-user me-1"></i>
+                                    <!-- Display seller's name if available, otherwise email -->
+                                    {{ seller.name or seller.email }}
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                                    <li><a class="dropdown-item" href="{{ url_for('seller_app.settings') }}"><i class="fas fa-user-cog fa-fw me-2"></i>Account Settings</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('seller_app.logout') }}"><i class="fas fa-sign-out-alt fa-fw me-2"></i>Logout</a></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                {% block content %}{% endblock %}
+                {% block content %}
+                <!-- This is where page-specific content will be injected -->
+                {% endblock %}
+
             </main>
         </div>
     </div>
 
+    <!-- Add Plan Modal (NOW DYNAMIC) -->
+    <div class="modal fade" id="addPlanModal" tabindex="-1" aria-labelledby="addPlanModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addPlanModalLabel">Create a New Subscription Plan</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <!-- Form now points to your add_plan API endpoint -->
+          <form id="addPlanForm" action="{{ url_for('seller_app.add_plan') }}" method="POST">
+              <div class="modal-body">
+                    <!-- Plan Name -->
+                    <div class="mb-3">
+                        <label for="planName" class="form-label">Plan Name</label>
+                        <input type="text" class="form-control" id="planName" name="name" placeholder="e.g., Gold Monthly, Basic Weekly" required>
+                    </div>
+
+                    <!-- Plan Price -->
+                    <div class="mb-3">
+                        <label for="planPrice" class="form-label">Price</label>
+                        <input type="text" class="form-control" id="planPrice" name="price" placeholder="e.g., ₹1500/month, ₹400/week" required>
+                        <div class="form-text">Enter price exactly as you want customers to see it.</div>
+                    </div>
+                    
+                    <!-- Plan Description -->
+                    <div class="mb-3">
+                        <label for="planDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="planDescription" name="description" rows="3" placeholder="e.g., 1.5L of A2 milk delivered daily."></textarea>
+                    </div>
+
+                    <!-- Plan Duration -->
+                    <div class="mb-3">
+                        <label for="planDuration" class="form-label">Duration</label>
+                        <input type="text" class="form-control" id="planDuration" name="duration" placeholder="e.g., 1 month, 7 days" required>
+                    </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save Plan</button>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     {% block scripts %}{% endblock %}
 </body>
 </html>
