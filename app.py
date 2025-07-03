@@ -25,6 +25,7 @@ app.register_blueprint(seller_app, url_prefix='/seller')
 CORS(app, supports_credentials=True)
 
 
+
 # Add these JWT configurations to your Flask app
 app.config["JWT_SECRET_KEY"] = "your_jwt_secret_key"
 app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
@@ -37,6 +38,8 @@ jwt = JWTManager(app)
 
 # Mongo setup
 MONGO_URI = "mongodb+srv://jstvamsikrisha:vamsikrishna@cluster0.wzwriwa.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+base_url = "https://ksheeram.onrender.com"
+
 
 try:
     # client = MongoClient("mongodb://localhost:27017/")
@@ -154,7 +157,6 @@ def products():
 
 
 # --------------------------- My Orders --------------------------------
-
 @app.route("/myorders", methods=["GET"])
 @jwt_required()
 def myorders():
@@ -288,9 +290,7 @@ def get_or_create_cart(buyer_id):
     return cart
 
 
-# --- API Route to add a PLAN to the cart ---
-
-
+# ---  Add a PLAN to the cart ---
 @app.route("/cart/add-plan", methods=["POST"])
 @jwt_required()
 def add_plan_to_cart():
@@ -349,7 +349,6 @@ def add_plan_to_cart():
 
 
 # --- UNIFIED Route to remove ANY item from the cart ---
-
 
 @app.route("/cart/remove", methods=["POST"])
 @jwt_required()
@@ -556,7 +555,7 @@ def buyer_login():
             identity=email, expires_delta=timedelta(hours=1)
         )
         cookie_expires = timedelta(hours=1)
-        resp = jsonify({"message": "Login successful", "redirect": "http://127.0.0.1:5000/home"})
+        resp = jsonify({"message": "Login successful", "redirect": f"{base_url}/home"})
         set_access_cookies(resp, access_token, max_age=cookie_expires)
         # resp.set_cookie("access_token", access_token, httponly=True, samesite="Lax")
 
@@ -627,14 +626,13 @@ def signup_buyer():
 
         access_token = create_access_token(identity=email, expires_delta=timedelta(days=1))
         cookie_expiry = timedelta(hours=1)
-        resp = jsonify({"message": "Registration successful", "redirect": "http://127.0.0.1:5000/home"})
+        resp = jsonify({"message": "Registration successful", "redirect": f"{base_url}/home"})
         set_access_cookies(resp, access_token, max_age=cookie_expiry)
         return resp
 
     except Exception as e:
         logging.error(f"Buyer registration error: {e}")
         return jsonify({"error": "Server error"}), 500
-
 
 # # ---------- Seller Registration ----------
 # @app.route("/register/seller", methods=["POST"])
