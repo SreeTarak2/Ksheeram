@@ -318,7 +318,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const initMap = () => {
     if (!elements.mapContainer) return;
     var Stadia_AlidadeSatellite = L.tileLayer(
-      "https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.{ext}",
+      // "https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.{ext}",
+      "https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}.{ext}",
       {
         minZoom: 0,
         maxZoom: 12,
@@ -335,7 +336,7 @@ document.addEventListener("DOMContentLoaded", () => {
           '<a href="https://www.openaip.net/">openAIP Data</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-NC-SA</a>)',
         ext: "png",
         minZoom: 4,
-        maxZoom: 4,
+        maxZoom: 12,
         tms: true,
         detectRetina: true,
         subdomains: "12",
