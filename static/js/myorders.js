@@ -4,7 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const statusFilter = document.getElementById('status-filter');
     let allOrders = [];
 
-    let url = 'http://127.0.0.1:5000'
+    // let url = 'http://127.0.0.1:5000'
+    let url = "https://ksheeram.onrender.com"
     const renderOrders = (orders) => {
         ordersTableBody.innerHTML = '';
 

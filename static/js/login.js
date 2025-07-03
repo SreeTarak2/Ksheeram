@@ -17,8 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const backLinks = document.querySelectorAll(".modal-back-link");
   const findFarmsBtn = document.querySelector("#open-login-modal-btn");
 
-  let seller_url = "http://127.0.0.1:5000";
-  let buyer_url = "http://127.0.0.1:5000";
+  let base_url = "https://ksheeram.onrender.com"
 
   // Handlers to switch between role selection and login forms
   buyerLoginBtn.addEventListener("click", () => {
@@ -87,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      const res = await fetch(`${buyer_url}/login/buyer`, {
+      const res = await fetch(`${base_url}/login/buyer`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
