@@ -33,6 +33,7 @@
 
 ## 🧱 Project Structure
 
+```
 ksheeram/
 │
 ├── templates/              # HTML templates
@@ -42,6 +43,8 @@ ksheeram/
 ├── app.py                  # Main app
 ├── requirements.txt        # Python dependencies
 └── README.md
+```
+
 ---
 
 ## 🌐 Live Demo
@@ -112,6 +115,7 @@ ksheeram/
 
 ## 📦 Local Installation
 
+```
 # Clone the repository
 git clone https://github.com/SreeTarak2/Ksheeram.git
 cd Ksheeram
@@ -125,6 +129,7 @@ pip install -r requirements.txt
 
 # Run the Flask app
 python app.py
+```
 
 ---
 
